@@ -1,0 +1,13 @@
+import { Router, Response } from "express";
+import authRoutes from './auth.routes';
+import reservationRoutes from './reservation.routes';
+import userRoutes from './user.routes';
+
+const router = Router();
+
+router.get('/healthcheck', (_, res: Response) => res.sendStatus(200));
+router.use('/auth', authRoutes);
+router.use('/reservations', reservationRoutes);
+router.use('/users', userRoutes);
+
+export default router;

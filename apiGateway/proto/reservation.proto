@@ -1,0 +1,61 @@
+syntax = "proto3";
+
+package reservationPackage;
+
+service ReservationService {
+  rpc CreateReservation (CreateReservationRequest) returns (ReservationResponse);
+  rpc GetReservation (GetReservationRequest) returns (ReservationResponse);
+  rpc GetReservations (GetReservationsRequest) returns (ReservationsResponse);
+  rpc UpdateReservation (UpdateReservationRequest) returns (ReservationResponse);
+  rpc DeleteReservation (DeleteReservationRequest) returns (EmptyResponse);
+}
+
+message CreateReservationRequest {
+  string reservation_id = 1;
+  string customer_id = 2;
+  string plumber_id = 3;
+  string repair_type = 4;
+  string description = 5;
+  string status = 6;
+  string date = 7;
+  string created_at = 8;
+  string updated_at = 9;
+}
+
+message GetReservationRequest {
+  string reservation_id = 1;
+}
+
+message GetReservationsRequest {
+  string customer_id = 1;
+  string plumber_id = 2;
+}
+
+message UpdateReservationRequest {
+  string reservation_id = 1;
+  string repair_type = 2;
+  string description = 3;
+  string status = 4;
+}
+
+message DeleteReservationRequest {
+  string reservation_id = 1;
+}
+
+message ReservationResponse {
+  string reservation_id = 1;
+  string customer_id = 2;
+  string plumber_id = 3;
+  string repair_type = 4;
+  string description = 5;
+  string status = 6;
+  string date = 7;
+  string created_at = 8;
+  string updated_at = 9;
+}
+
+message ReservationsResponse {
+  repeated ReservationResponse reservations = 1;
+}
+
+message EmptyResponse {}
