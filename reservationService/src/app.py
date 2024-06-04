@@ -104,7 +104,7 @@ class ReservationService():
 
         try:
             if hasattr(request, 'plumber_id') and request.plumber_id:
-                query += " AND plumber_id = %s"
+                query += " plumber_id = %s"
                 params.append(request.plumber_id)
             if hasattr(request, 'customer_id') and request.customer_id:
                 if params:
