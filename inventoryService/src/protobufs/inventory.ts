@@ -14,8 +14,9 @@ export interface ProtoGrpcType {
     GetRequiredPartsRequest: MessageTypeDefinition
     GetRequiredPartsResponse: MessageTypeDefinition
     InventoryService: SubtypeConstructor<typeof grpc.Client, _inventoryPackage_InventoryServiceClient> & { service: _inventoryPackage_InventoryServiceDefinition }
-    ManageStockRequest: MessageTypeDefinition
-    ManageStockResponse: MessageTypeDefinition
+    ManageStockLevelsRequest: MessageTypeDefinition
+    ManageStockLevelsResponse: MessageTypeDefinition
+    PartInfo: MessageTypeDefinition
     ReservePartsRequest: MessageTypeDefinition
     ReservePartsResponse: MessageTypeDefinition
   }

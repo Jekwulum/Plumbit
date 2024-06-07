@@ -2,9 +2,9 @@
 
 
 export interface GetRequiredPartsRequest {
-  'repairType'?: (string);
+  'repairTypeName'?: (string);
 }
 
 export interface GetRequiredPartsRequest__Output {
-  'repairType'?: (string);
+  'repairTypeName'?: (string);
 }

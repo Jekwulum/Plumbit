@@ -1,12 +1,14 @@
 // Original file: proto/inventory.proto
 
 
-export interface ManageStockRequest {
+export interface PartInfo {
   'partId'?: (string);
+  'partName'?: (string);
   'quantity'?: (number);
 }
 
-export interface ManageStockRequest__Output {
+export interface PartInfo__Output {
   'partId'?: (string);
+  'partName'?: (string);
   'quantity'?: (number);
 }

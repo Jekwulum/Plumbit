@@ -1,12 +1,12 @@
 // Original file: proto/inventory.proto
 
 
-export interface ManageStockResponse {
+export interface ManageStockLevelsResponse {
   'success'?: (boolean);
   'message'?: (string);
 }
 
-export interface ManageStockResponse__Output {
+export interface ManageStockLevelsResponse__Output {
   'success'?: (boolean);
   'message'?: (string);
 }

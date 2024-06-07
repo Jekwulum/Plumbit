@@ -15,6 +15,16 @@ const Queries = {
         required_parts UUID[] NOT NULL
       );
   `,
+
+  getPartsQuery: `SELECT * FROM parts WHERE part_id = ANY($1);`,
+
+  getAllPartsQuery: `SELECT * FROM parts;`,
+
+  getRequiredPartsQuery: `SELECT required_parts FROM repair_types WHERE repair_type_name = $1;`,
+
+  getPartsQuantityQuery: `SELECT part_name, quantity FROM parts WHERE part_id = $1 FOR UPDATE;`,
+
+  updatePartQuantity: `UPDATE parts SET quantity = $1 WHERE part_id = $2;`,
 };
 
 export default Queries;

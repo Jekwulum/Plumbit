@@ -3,10 +3,16 @@ syntax = "proto3";
 package inventoryPackage;
 
 service InventoryService {
-  rpc CheckPartsAvailabity(CheckPartsRequest) returns (CheckPartsResponse);
-  rpc GetRequiredParts(GetRequiredPartsRequest) returns (GetRequiredPartsResponse);
+  rpc CheckPartsAvailability(CheckPartsRequest) returns (CheckPartsResponse);
   rpc ReserveParts(ReservePartsRequest) returns (ReservePartsResponse);
-  rpc ManageStockLevels(ManageStockRequest) returns (ManageStockResponse);
+  rpc GetRequiredParts(GetRequiredPartsRequest) returns (GetRequiredPartsResponse);
+  rpc ManageStockLevels(ManageStockLevelsRequest) returns (ManageStockLevelsResponse);
+}
+
+message PartInfo {
+  string partId = 1;
+  string partName = 2;
+  int32 quantity = 3;
 }
 
 message CheckPartsRequest {
@@ -14,20 +20,12 @@ message CheckPartsRequest {
 }
 
 message CheckPartsResponse {
-  map<string, int32> parts_availability = 1; // this is a hashmap for partId as key and quantity as value
-}
-
-message GetRequiredPartsRequest {
-  string repairType = 1;
-}
-
-message GetRequiredPartsResponse {
-  repeated string partIds = 1;
+  repeated PartInfo partsInfo = 1;
 }
 
 message ReservePartsRequest {
   string reservationId = 1;
-  map<string, int32> parts_to_reserve = 2; // this is a hashmap for partId as key and quantity as value
+  map<string, int32> partsToReserve = 2;  // a map for parts to reserve; part_id -> quantity
 }
 
 message ReservePartsResponse {
@@ -35,12 +33,19 @@ message ReservePartsResponse {
   string message = 2;
 }
 
-message ManageStockRequest {
-  string partId = 1;
-  int32 quantity = 2;
+message GetRequiredPartsRequest {
+  string repairTypeName = 1;
 }
 
-message ManageStockResponse {
+message GetRequiredPartsResponse {
+  repeated PartInfo partsInfo = 1;
+}
+
+message ManageStockLevelsRequest {
+  map<string, int32> partsToUpdate = 1; // part_id -> quantity adjustment (positive for adding, negative for removing)
+}
+
+message ManageStockLevelsResponse {
   bool success = 1;
   string message = 2;
 }
