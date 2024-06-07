@@ -8,7 +8,8 @@ dotenv.config();
 import { ProtoGrpcType } from './protobufs/inventory';
 import InventoryHandler from './handlers/inventory.handler';
 import inventoryLogger from './utils/inventory.logger';
-import PoolConnector from './utils/pool.connector';
+import PoolConnector, { queryPromise } from './utils/pool.connector';
+import Queries from './utils/queries.util';
 
 const PORT = process.env.PORT || 4003;
 const PROTO_PATH = path.resolve(__dirname, '../proto/inventory.proto');
@@ -20,10 +21,19 @@ const inventoryPackage = grpcObject.inventoryPackage;
 const server = new grpc.Server();
 server.addService(inventoryPackage.InventoryService.service, InventoryHandler);
 
-PoolConnector.query('SELECT NOW();', error => {
-  if (error) inventoryLogger.error(`Error connecting to the database: ${error}`);
-  else inventoryLogger.info(`[Database connection]: Connected correctly to Plumbit Inventory database`);
-});
+Promise.all([
+  queryPromise(
+    Queries.createPartsableQuery,
+    "[Database]: Parts table created successfully",
+    "Error creating parts table: "
+  ),
+  queryPromise(
+    Queries.createRepairTypesTableQuery,
+    "[Database]: Repair types table created successfully",
+    "Error creating repair types table: "
+  )
+])
+  .catch((error) => inventoryLogger.error(`Error creating tables: ${error}`));
 
 server.bindAsync(`localhost:${PORT}`, grpc.ServerCredentials.createInsecure(), (err, port) => {
   if (err) inventoryLogger.error(`Error running the server ${err}`);
