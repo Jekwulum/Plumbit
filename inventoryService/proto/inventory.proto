@@ -1,0 +1,46 @@
+syntax = "proto3";
+
+package inventoryPackage;
+
+service InventoryService {
+  rpc CheckPartsAvailabity(CheckPartsRequest) returns (CheckPartsResponse);
+  rpc GetRequiredParts(GetRequiredPartsRequest) returns (GetRequiredPartsResponse);
+  rpc ReserveParts(ReservePartsRequest) returns (ReservePartsResponse);
+  rpc ManageStockLevels(ManageStockRequest) returns (ManageStockResponse);
+}
+
+message CheckPartsRequest {
+  repeated string partIds = 1;
+}
+
+message CheckPartsResponse {
+  map<string, int32> parts_availability = 1; // this is a hashmap for partId as key and quantity as value
+}
+
+message GetRequiredPartsRequest {
+  string repairType = 1;
+}
+
+message GetRequiredPartsResponse {
+  repeated string partIds = 1;
+}
+
+message ReservePartsRequest {
+  string reservationId = 1;
+  map<string, int32> parts_to_reserve = 2; // this is a hashmap for partId as key and quantity as value
+}
+
+message ReservePartsResponse {
+  bool success = 1;
+  string message = 2;
+}
+
+message ManageStockRequest {
+  string partId = 1;
+  int32 quantity = 2;
+}
+
+message ManageStockResponse {
+  bool success = 1;
+  string message = 2;
+}

@@ -29,5 +29,5 @@ mongoose.connect(mongoURI as string)
 
 server.bindAsync(`localhost:${PORT}`, grpc.ServerCredentials.createInsecure(), (err, port) => {
   if (err) appLogger.error(`Error running the server ${err}`);
-  else appLogger.info(`Server running at http://localhost:${port}`);
+  else appLogger.info(`User-service Server running at http://localhost:${port}`);
 });

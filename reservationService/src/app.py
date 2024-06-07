@@ -22,7 +22,7 @@ class ReservationService():
                 **db_connection_params, cursor_factory=RealDictCursor)
             self.cursor = self.conn.cursor()
             self.create_table()
-            print("[Database Connection]: Connected to PostgreSQL")
+            print("[Database Connection]: Connected to Plumbit Reservation Database")
             # self.cursor.close()
         except (Exception, psycopg2.DatabaseError) as error:
             print("Error while connecting to PostgreSQL", error)
