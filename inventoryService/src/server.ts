@@ -8,7 +8,7 @@ dotenv.config();
 import { ProtoGrpcType } from './protobufs/inventory';
 import InventoryHandler from './handlers/inventory.handler';
 import inventoryLogger from './utils/inventory.logger';
-import PoolConnector, { queryPromise } from './utils/pool.connector';
+import { queryPromise } from './utils/pool.connector';
 import Queries from './utils/queries.util';
 
 const PORT = process.env.PORT || 4003;
