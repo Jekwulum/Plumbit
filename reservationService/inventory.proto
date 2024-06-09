@@ -4,8 +4,6 @@ package inventoryPackage;
 
 service InventoryService {
   rpc AddPart(AddPartRequest) returns (AddPartResponse);
-  rpc AddRepairType(AddRepairTypeRequest) returns (AddRepairTypeResponse);
-  rpc GetRepairTypes(Empty) returns (GetRepairTypesResponse);
   rpc CheckPartsAvailability(CheckPartsRequest) returns (CheckPartsResponse);
   rpc ReserveParts(ReservePartsRequest) returns (ReservePartsResponse);
   rpc GetRequiredParts(GetRequiredPartsRequest) returns (GetRequiredPartsResponse);
@@ -37,7 +35,7 @@ message ReservePartsResponse {
 }
 
 message GetRequiredPartsRequest {
-  string repairType = 1;
+  string repairTypeName = 1;
 }
 
 message GetRequiredPartsResponse {
@@ -54,25 +52,17 @@ message ManageStockLevelsResponse {
 }
 
 message AddPartRequest {
-  string partName = 1;
-  int32 quantity = 2;
+  PartInfo partInfo = 1;
 }
 
 message AddPartResponse {
   PartInfo partInfo = 1;
 }
 
-message AddRepairTypeRequest {
-  string repairType = 1;
-  repeated string requiredParts = 2;
-}
+// message AddRepairTypeRequest {
+//   RepairType repair_type = 1;
+// }
 
-message AddRepairTypeResponse {
-  bool success = 1;
-}
-
-message GetRepairTypesResponse {
-  repeated string repairTypes = 1;
-}
-
-message Empty {}
+// message AddRepairTypeResponse {
+//   bool success = 1;
+// }

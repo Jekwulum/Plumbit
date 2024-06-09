@@ -5,7 +5,7 @@ import os
 from datetime import datetime
 
 from psycopg2.extras import RealDictCursor
-from protobufs import reservation_pb2
+from protobufs import reservation_pb2, inventory_pb2, inventory_pb2_grpc
 # 
 
 db_connection_params = {
@@ -13,6 +13,8 @@ db_connection_params = {
     'database': os.getenv('DATABASE_NAME'),
     'user': os.getenv('DATABASE_USER'),
     'password': os.getenv('DATABASE_PASSWORD')}
+
+INVENTORY_SERVICE_PORT = os.getenv('INVENTORY_SERVICE_PORT', 4003)
 
 
 class ReservationService():
@@ -23,7 +25,9 @@ class ReservationService():
             self.cursor = self.conn.cursor()
             self.create_table()
             print("[Database Connection]: Connected to Plumbit Reservation Database")
-            # self.cursor.close()
+
+            self.inventory_channel = grpc.insecure_channel(f"localhost:{INVENTORY_SERVICE_PORT}")
+            self.inventory_stub = inventory_pb2_grpc.InventoryServiceStub(self.inventory_channel)
         except (Exception, psycopg2.DatabaseError) as error:
             print("Error while connecting to PostgreSQL", error)
 

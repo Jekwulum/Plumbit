@@ -9,8 +9,14 @@ type SubtypeConstructor<Constructor extends new (...args: any) => any, Subtype> 
 
 export interface ProtoGrpcType {
   inventoryPackage: {
+    AddPartRequest: MessageTypeDefinition
+    AddPartResponse: MessageTypeDefinition
+    AddRepairTypeRequest: MessageTypeDefinition
+    AddRepairTypeResponse: MessageTypeDefinition
     CheckPartsRequest: MessageTypeDefinition
     CheckPartsResponse: MessageTypeDefinition
+    Empty: MessageTypeDefinition
+    GetRepairTypesResponse: MessageTypeDefinition
     GetRequiredPartsRequest: MessageTypeDefinition
     GetRequiredPartsResponse: MessageTypeDefinition
     InventoryService: SubtypeConstructor<typeof grpc.Client, _inventoryPackage_InventoryServiceClient> & { service: _inventoryPackage_InventoryServiceDefinition }

@@ -1,10 +1,10 @@
 // Original file: proto/inventory.proto
 
 
-export interface GetRequiredPartsRequest {
+export interface GetRepairTypesRequest {
   'repairType'?: (string);
 }
 
-export interface GetRequiredPartsRequest__Output {
+export interface GetRepairTypesRequest__Output {
   'repairType'?: (string);
 }

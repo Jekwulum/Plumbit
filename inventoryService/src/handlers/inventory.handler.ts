@@ -1,4 +1,5 @@
 import * as grpc from '@grpc/grpc-js';
+import { v4 as uuidv4 } from 'uuid';
 import { InventoryServiceHandlers } from '../protobufs/inventoryPackage/InventoryService';
 // import {Inventory, Inventory__Output} from '../protobufs/inventoryPackage/'
 import { CheckPartsRequest } from '../protobufs/inventoryPackage/CheckPartsRequest';
@@ -10,11 +11,62 @@ import { ReservePartsResponse } from '../protobufs/inventoryPackage/ReserveParts
 import { ManageStockLevelsRequest } from '../protobufs/inventoryPackage/ManageStockLevelsRequest';
 import { ManageStockLevelsResponse } from '../protobufs/inventoryPackage/ManageStockLevelsResponse';
 import { PartInfo } from '../protobufs/inventoryPackage/PartInfo';
+import { AddPartRequest } from '../protobufs/inventoryPackage/AddPartRequest';
+import { AddPartResponse } from '../protobufs/inventoryPackage/AddPartResponse';
+import { AddRepairTypeRequest } from '../protobufs/inventoryPackage/AddRepairTypeRequest';
+import { AddRepairTypeResponse } from '../protobufs/inventoryPackage/AddRepairTypeResponse';
 import PoolConnector from '../utils/pool.connector';
 import Queries from '../utils/queries.util';
 import inventoryLogger from '../utils/inventory.logger';
+import { Empty } from '../protobufs/inventoryPackage/Empty';
+import { GetRepairTypesResponse } from '../protobufs/inventoryPackage/GetRepairTypesResponse';
 
 const InventoryHandler: InventoryServiceHandlers = {
+  AddPart: async (call: grpc.ServerUnaryCall<AddPartRequest, AddPartResponse>, callback: grpc.sendUnaryData<AddPartResponse>) => {
+    try {
+      const { partName, quantity } = call.request;
+      const partId = uuidv4();
+
+      const res = await PoolConnector.query(Queries.addPartQuery, [partId, partName, quantity]);
+      if (res.rowCount === 0) {
+        return callback({ code: grpc.status.INTERNAL, message: 'Failed to add part' }, null);
+      }
+
+      callback(null, { partInfo: res.rows[0] });
+    } catch (error: any) {
+      inventoryLogger.error(error.message);
+      return callback({ code: grpc.status.INTERNAL, message: error.message }, null);
+    }
+  },
+
+  AddRepairType: async (call: grpc.ServerUnaryCall<AddRepairTypeRequest, AddRepairTypeResponse>, callback: grpc.sendUnaryData<AddRepairTypeResponse>) => {
+    try {
+      const { repairType, requiredParts } = call.request;
+      const res = await PoolConnector.query(Queries.addRepairTypeQuery, [repairType, requiredParts]);
+      
+      if (res.rowCount === 0) {
+        return callback({ code: grpc.status.INTERNAL, message: 'Failed to add repair type' }, null);
+      }
+
+      callback(null, { success: true });
+    } catch (error: any) {
+      inventoryLogger.error(error.message);
+      return callback({ code: grpc.status.INTERNAL, message: error.message }, null);
+    }
+  },
+
+  GetRepairTypes: async (call: grpc.ServerUnaryCall<Empty, GetRepairTypesResponse>, callback: grpc.sendUnaryData<GetRepairTypesResponse>) => {
+    try {
+      const res = await PoolConnector.query(Queries.getRepairTypesQuery);
+      const repairTypes = res.rows.map((row) => row.repair_type);
+
+      callback(null, { repairTypes });
+    } catch (error: any) {
+      inventoryLogger.error(error.message);
+      return callback({ code: grpc.status.INTERNAL, message: error.message }, null);
+    }
+  },
+
   CheckPartsAvailability: async (call: grpc.ServerUnaryCall<CheckPartsRequest, CheckPartsResponse>, callback: grpc.sendUnaryData<CheckPartsResponse>) => {
     try {
       const partIds = call.request.partIds;
@@ -37,7 +89,7 @@ const InventoryHandler: InventoryServiceHandlers = {
 
   GetRequiredParts: async (call: grpc.ServerUnaryCall<GetRequiredPartsRequest, GetRequiredPartsResponse>, callback: grpc.sendUnaryData<GetRequiredPartsResponse>) => {
     try {
-      const repairTypeName = call.request.repairTypeName;
+      const repairTypeName = call.request.repairType;
 
       const res = await PoolConnector.query(Queries.getRequiredPartsQuery, [repairTypeName]);
       if (res.rows.length === 0) {
@@ -45,7 +97,7 @@ const InventoryHandler: InventoryServiceHandlers = {
       }
 
       const requiredPartsIds = res.rows[0].required_parts;
-      const partsRes = await PoolConnector.query('', [requiredPartsIds]);
+      const partsRes = await PoolConnector.query(Queries.getPartsQuery, [requiredPartsIds]);
 
       const partsInfo: PartInfo[] = partsRes.rows.map((row) => ({
         partId: row.part_id,
