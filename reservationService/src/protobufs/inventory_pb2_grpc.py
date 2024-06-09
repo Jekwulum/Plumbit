@@ -39,6 +39,21 @@ class InventoryServiceStub(object):
         Args:
             channel: A grpc.Channel.
         """
+        self.AddPart = channel.unary_unary(
+                '/inventoryPackage.InventoryService/AddPart',
+                request_serializer=inventory__pb2.AddPartRequest.SerializeToString,
+                response_deserializer=inventory__pb2.AddPartResponse.FromString,
+                _registered_method=True)
+        self.AddRepairType = channel.unary_unary(
+                '/inventoryPackage.InventoryService/AddRepairType',
+                request_serializer=inventory__pb2.AddRepairTypeRequest.SerializeToString,
+                response_deserializer=inventory__pb2.AddRepairTypeResponse.FromString,
+                _registered_method=True)
+        self.GetRepairTypes = channel.unary_unary(
+                '/inventoryPackage.InventoryService/GetRepairTypes',
+                request_serializer=inventory__pb2.Empty.SerializeToString,
+                response_deserializer=inventory__pb2.GetRepairTypesResponse.FromString,
+                _registered_method=True)
         self.CheckPartsAvailability = channel.unary_unary(
                 '/inventoryPackage.InventoryService/CheckPartsAvailability',
                 request_serializer=inventory__pb2.CheckPartsRequest.SerializeToString,
@@ -63,6 +78,24 @@ class InventoryServiceStub(object):
 
 class InventoryServiceServicer(object):
     """Missing associated documentation comment in .proto file."""
+
+    def AddPart(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def AddRepairType(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def GetRepairTypes(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
 
     def CheckPartsAvailability(self, request, context):
         """Missing associated documentation comment in .proto file."""
@@ -91,6 +124,21 @@ class InventoryServiceServicer(object):
 
 def add_InventoryServiceServicer_to_server(servicer, server):
     rpc_method_handlers = {
+            'AddPart': grpc.unary_unary_rpc_method_handler(
+                    servicer.AddPart,
+                    request_deserializer=inventory__pb2.AddPartRequest.FromString,
+                    response_serializer=inventory__pb2.AddPartResponse.SerializeToString,
+            ),
+            'AddRepairType': grpc.unary_unary_rpc_method_handler(
+                    servicer.AddRepairType,
+                    request_deserializer=inventory__pb2.AddRepairTypeRequest.FromString,
+                    response_serializer=inventory__pb2.AddRepairTypeResponse.SerializeToString,
+            ),
+            'GetRepairTypes': grpc.unary_unary_rpc_method_handler(
+                    servicer.GetRepairTypes,
+                    request_deserializer=inventory__pb2.Empty.FromString,
+                    response_serializer=inventory__pb2.GetRepairTypesResponse.SerializeToString,
+            ),
             'CheckPartsAvailability': grpc.unary_unary_rpc_method_handler(
                     servicer.CheckPartsAvailability,
                     request_deserializer=inventory__pb2.CheckPartsRequest.FromString,
@@ -121,6 +169,87 @@ def add_InventoryServiceServicer_to_server(servicer, server):
  # This class is part of an EXPERIMENTAL API.
 class InventoryService(object):
     """Missing associated documentation comment in .proto file."""
+
+    @staticmethod
+    def AddPart(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/inventoryPackage.InventoryService/AddPart',
+            inventory__pb2.AddPartRequest.SerializeToString,
+            inventory__pb2.AddPartResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def AddRepairType(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/inventoryPackage.InventoryService/AddRepairType',
+            inventory__pb2.AddRepairTypeRequest.SerializeToString,
+            inventory__pb2.AddRepairTypeResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def GetRepairTypes(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/inventoryPackage.InventoryService/GetRepairTypes',
+            inventory__pb2.Empty.SerializeToString,
+            inventory__pb2.GetRepairTypesResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
 
     @staticmethod
     def CheckPartsAvailability(request,
