@@ -1,0 +1,78 @@
+syntax = "proto3";
+
+package inventoryPackage;
+
+service InventoryService {
+  rpc AddPart(AddPartRequest) returns (AddPartResponse);
+  rpc AddRepairType(AddRepairTypeRequest) returns (AddRepairTypeResponse);
+  rpc GetRepairTypes(Empty) returns (GetRepairTypesResponse);
+  rpc CheckPartsAvailability(CheckPartsRequest) returns (CheckPartsResponse);
+  rpc ReserveParts(ReservePartsRequest) returns (ReservePartsResponse);
+  rpc GetRequiredParts(GetRequiredPartsRequest) returns (GetRequiredPartsResponse);
+  rpc ManageStockLevels(ManageStockLevelsRequest) returns (ManageStockLevelsResponse);
+}
+
+message PartInfo {
+  string partId = 1;
+  string partName = 2;
+  int32 quantity = 3;
+}
+
+message CheckPartsRequest {
+  repeated string partIds = 1;
+}
+
+message CheckPartsResponse {
+  repeated PartInfo partsInfo = 1;
+}
+
+message ReservePartsRequest {
+  string reservationId = 1;
+  map<string, int32> partsToReserve = 2;  // a map for parts to reserve; part_id -> quantity
+}
+
+message ReservePartsResponse {
+  bool success = 1;
+  string message = 2;
+}
+
+message GetRequiredPartsRequest {
+  string repairType = 1;
+}
+
+message GetRequiredPartsResponse {
+  repeated PartInfo partsInfo = 1;
+}
+
+message ManageStockLevelsRequest {
+  map<string, int32> partsToUpdate = 1; // part_id -> quantity adjustment (positive for adding, negative for removing)
+}
+
+message ManageStockLevelsResponse {
+  bool success = 1;
+  string message = 2;
+}
+
+message AddPartRequest {
+  string partName = 1;
+  int32 quantity = 2;
+}
+
+message AddPartResponse {
+  PartInfo partInfo = 1;
+}
+
+message AddRepairTypeRequest {
+  string repairType = 1;
+  repeated string requiredParts = 2;
+}
+
+message AddRepairTypeResponse {
+  bool success = 1;
+}
+
+message GetRepairTypesResponse {
+  repeated string repairTypes = 1;
+}
+
+message Empty {}
