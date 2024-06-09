@@ -26,6 +26,16 @@ const InventoryController = {
     });
   },
 
+  UpdateRepairType: async (req: Request, res: Response) => {
+    const { repairType, requiredParts } = req.body;
+    InventoryClient.UpdateRepairType({ repairType, requiredParts }, (err: ServiceError | null, result) => {
+      if (err) {
+        appLogger.error(err.message);
+        res.status(500).json({ message: `${err.message}` });
+      } else res.status(200).json({ data: result });
+    });
+  },
+
   CheckPartsAvailability: async (req: Request, res: Response) => {
     const { partIds } = req.body;
     InventoryClient.CheckPartsAvailability({ partIds }, (err: ServiceError | null, result) => {

@@ -12,5 +12,6 @@ router.post('/check-availability', validateResource(InventoryValidator.checkPart
 router.post('/add-repair-type', validateResource(InventoryValidator.addRepairType), InventoryController.AddRepairType);
 router.get('/required-parts', validateResource(InventoryValidator.getRequiredParts), InventoryController.GetRequiredParts);
 router.get('/repair-types', InventoryController.GetRepairTypes);
+router.patch('/repair-types', validateResource(InventoryValidator.addRepairType), InventoryController.UpdateRepairType);
 
 export default router;

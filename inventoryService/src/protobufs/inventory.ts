@@ -25,6 +25,8 @@ export interface ProtoGrpcType {
     PartInfo: MessageTypeDefinition
     ReservePartsRequest: MessageTypeDefinition
     ReservePartsResponse: MessageTypeDefinition
+    UpdateRepairTypeRequest: MessageTypeDefinition
+    UpdateRepairTypeResponse: MessageTypeDefinition
   }
 }
 

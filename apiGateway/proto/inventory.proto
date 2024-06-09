@@ -10,7 +10,10 @@ service InventoryService {
   rpc ReserveParts(ReservePartsRequest) returns (ReservePartsResponse);
   rpc GetRequiredParts(GetRequiredPartsRequest) returns (GetRequiredPartsResponse);
   rpc ManageStockLevels(ManageStockLevelsRequest) returns (ManageStockLevelsResponse);
+  rpc UpdateRepairType(UpdateRepairTypeRequest) returns (UpdateRepairTypeResponse);
 }
+
+message Empty {};
 
 message PartInfo {
   string partId = 1;
@@ -75,4 +78,11 @@ message GetRepairTypesResponse {
   repeated string repairTypes = 1;
 }
 
-message Empty {}
+message UpdateRepairTypeRequest {
+  string repairType = 1;
+  repeated string requiredParts = 2;
+}
+
+message UpdateRepairTypeResponse {
+  bool success = 1;
+}

@@ -22,6 +22,8 @@ const Queries = {
 
   getRepairTypesQuery: `SELECT repair_type FROM repair_types;`,
 
+  updateRepairTypeQuery: `UPDATE repair_types SET required_parts = $1 WHERE repair_type = $2 RETURNING *;`,
+
   getPartsQuery: `SELECT * FROM parts WHERE part_id = ANY($1);`,
 
   getAllPartsQuery: `SELECT * FROM parts;`,

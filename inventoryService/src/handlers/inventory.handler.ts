@@ -67,6 +67,20 @@ const InventoryHandler: InventoryServiceHandlers = {
     }
   },
 
+  UpdateRepairType: async (call: grpc.ServerUnaryCall<AddRepairTypeRequest, AddRepairTypeResponse>, callback: grpc.sendUnaryData<AddRepairTypeResponse>) => {
+    try {
+      const { repairType, requiredParts } = call.request;
+      const res = await PoolConnector.query(Queries.updateRepairTypeQuery, [requiredParts, repairType]);
+      
+      if (res.rowCount === 0) return callback({ code: grpc.status.NOT_FOUND, message: `Repair type ${repairType} not found` }, null);
+
+      callback(null, { success: true });
+    } catch (error: any) {
+      inventoryLogger.error(error.message);
+      return callback({ code: grpc.status.INTERNAL, message: error.message }, null);
+    }
+  },
+
   CheckPartsAvailability: async (call: grpc.ServerUnaryCall<CheckPartsRequest, CheckPartsResponse>, callback: grpc.sendUnaryData<CheckPartsResponse>) => {
     try {
       const partIds = call.request.partIds;
