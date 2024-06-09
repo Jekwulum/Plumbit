@@ -3,10 +3,11 @@ import grpc
 import psycopg2
 import os
 from datetime import datetime
+from google.protobuf.json_format import MessageToDict
 
 from psycopg2.extras import RealDictCursor
 from protobufs import reservation_pb2, inventory_pb2, inventory_pb2_grpc
-# 
+#
 
 db_connection_params = {
     'host': os.getenv('DATABASE_HOST'),
@@ -26,8 +27,10 @@ class ReservationService():
             self.create_table()
             print("[Database Connection]: Connected to Plumbit Reservation Database")
 
-            self.inventory_channel = grpc.insecure_channel(f"localhost:{INVENTORY_SERVICE_PORT}")
-            self.inventory_stub = inventory_pb2_grpc.InventoryServiceStub(self.inventory_channel)
+            self.inventory_channel = grpc.insecure_channel(
+                f"localhost:{INVENTORY_SERVICE_PORT}")
+            self.inventory_stub = inventory_pb2_grpc.InventoryServiceStub(
+                self.inventory_channel)
         except (Exception, psycopg2.DatabaseError) as error:
             print("Error while connecting to PostgreSQL", error)
 
@@ -68,6 +71,23 @@ class ReservationService():
     def CreateReservation(self, request, context):
         reservation_id = str(uuid.uuid4())
         created_at = updated_at = datetime.now().date()
+
+        parts_response = self.inventory_stub.GetRequiredParts(
+            inventory_pb2.GetRequiredPartsRequest(
+                repairType=request.repair_type)
+        )
+        partsInfo = MessageToDict(parts_response)
+        for partInfo in partsInfo['partsInfo']:
+            partId = partInfo['partId']
+            quantity = partInfo['quantity']
+            partName = partInfo['partName']
+
+            if quantity <= 0:
+                context.set_code(grpc.StatusCode.FAILED_PRECONDITION)
+                context.set_details(
+                    f"Part {partId} --> ({partName}) is out of stock")
+                return reservation_pb2.ReservationResponse()
+
         query = """
                     INSERT INTO reservations (reservation_id, customer_id, plumber_id, repair_type, description, status, date, created_at, updated_at)
                     VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s) RETURNING *;
