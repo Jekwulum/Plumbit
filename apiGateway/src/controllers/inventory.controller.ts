@@ -64,6 +64,17 @@ const InventoryController = {
       } else res.status(200).json({ data: result });
     });
   },
+
+  ManageStockLevels: async (req: Request, res: Response) => {
+    const { partsToUpdate } = req.body;
+    console.log(partsToUpdate);
+    InventoryClient.ManageStockLevels({ partsToUpdate }, (err: ServiceError | null, result) => {
+      if (err) {
+        appLogger.error(err.message);
+        res.status(500).json({ message: `${err.message}` });
+      } else res.status(200).json({ data: result });
+    });
+  },
 };
 
 export default InventoryController;

@@ -35,6 +35,14 @@ const InventoryValidator = {
       partIds: Joi.array().items(Joi.string()),
     }),
   }),
+
+  manageStockLevels: Joi.object({
+    params: Joi.object().optional(),
+    query: Joi.object().optional(),
+    body: Joi.object().keys({
+      partsToUpdate: Joi.object().pattern(Joi.string(), Joi.number()).required(),
+    }),
+  }),
 };
 
 export default InventoryValidator;
