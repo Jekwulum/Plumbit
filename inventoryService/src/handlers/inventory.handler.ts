@@ -176,9 +176,11 @@ const InventoryHandler: InventoryServiceHandlers = {
       await client.query('BEGIN');
 
       const partsToReserve: { [key: string]: Number } | undefined = call.request.partsToReserve;
+      console.log(partsToReserve);
       if (partsToReserve) {
         for (const [partId, quantity] of Object.entries(partsToReserve)) {
-          const res = await client.query(Queries.getPartsQuery, [partId]);
+          console.log(partId, quantity)
+          const res = await client.query(Queries.getPartsQuery, [[partId]]);
           if (res.rows.length === 0 || res.rows[0].quantity < Number(quantity)) {
             await client.query('ROLLBACK');
             return callback({
