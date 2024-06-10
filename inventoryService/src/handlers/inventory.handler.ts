@@ -20,6 +20,8 @@ import Queries from '../utils/queries.util';
 import inventoryLogger from '../utils/inventory.logger';
 import { Empty } from '../protobufs/inventoryPackage/Empty';
 import { GetRepairTypesResponse } from '../protobufs/inventoryPackage/GetRepairTypesResponse';
+import { UpdatePartRequest } from '../protobufs/inventoryPackage/UpdatePartRequest';
+import { UpdatePartResponse } from '../protobufs/inventoryPackage/UpdatePartResponse';
 
 const InventoryHandler: InventoryServiceHandlers = {
   AddPart: async (call: grpc.ServerUnaryCall<AddPartRequest, AddPartResponse>, callback: grpc.sendUnaryData<AddPartResponse>) => {
@@ -39,11 +41,48 @@ const InventoryHandler: InventoryServiceHandlers = {
     }
   },
 
+  UpdatePart: async (call: grpc.ServerUnaryCall<UpdatePartRequest, UpdatePartResponse>, callback: grpc.sendUnaryData<UpdatePartResponse>) => {
+    try {
+      const { partId, partName, quantity } = call.request;
+      let query = 'UPDATE parts SET updated_at = CURRENT_TIMESTAMP';
+      let params: (string | Number)[] = [partId as string];
+
+      if (partName) {
+        query = `${query}, part_name = $${params.length + 1}`;
+        params.push(partName);
+      }
+
+      if (quantity) {
+        query = `${query}, quantity = $${params.length + 1}`;
+        params.push(quantity);
+      }
+
+      query = `${query} WHERE part_id = $1 RETURNING *;`;
+      const res = await PoolConnector.query(query, params);
+      if (res.rowCount === 0) {
+        inventoryLogger.error(`Part with ID ${partId} not found`);
+        return callback({ code: grpc.status.NOT_FOUND, message: `Part with ID ${partId} not found` }, null);
+      } else {
+        const part = res.rows[0];
+        const partInfo: PartInfo = {
+          partId: part.part_id,
+          partName: part.part_name,
+          quantity: part.quantity,
+        };
+        return callback(null, { partInfo });
+      }
+
+    } catch (error: any) {
+      inventoryLogger.error(error.message);
+      return callback({ code: grpc.status.INTERNAL, message: error.message }, null);
+    }
+  },
+
   AddRepairType: async (call: grpc.ServerUnaryCall<AddRepairTypeRequest, AddRepairTypeResponse>, callback: grpc.sendUnaryData<AddRepairTypeResponse>) => {
     try {
       const { repairType, requiredParts } = call.request;
       const res = await PoolConnector.query(Queries.addRepairTypeQuery, [repairType, requiredParts]);
-      
+
       if (res.rowCount === 0) {
         return callback({ code: grpc.status.INTERNAL, message: 'Failed to add repair type' }, null);
       }
@@ -71,7 +110,7 @@ const InventoryHandler: InventoryServiceHandlers = {
     try {
       const { repairType, requiredParts } = call.request;
       const res = await PoolConnector.query(Queries.updateRepairTypeQuery, [requiredParts, repairType]);
-      
+
       if (res.rowCount === 0) return callback({ code: grpc.status.NOT_FOUND, message: `Repair type ${repairType} not found` }, null);
 
       callback(null, { success: true });
@@ -82,6 +121,11 @@ const InventoryHandler: InventoryServiceHandlers = {
   },
 
   CheckPartsAvailability: async (call: grpc.ServerUnaryCall<CheckPartsRequest, CheckPartsResponse>, callback: grpc.sendUnaryData<CheckPartsResponse>) => {
+    /**
+    This method handles the availability check of parts in the inventory.
+    - If a list of part IDs is provided in the request, it queries the database to fetch details (ID, name, quantity) for those specific parts.
+    - If no part IDs are provided, it retrieves details for all parts in the inventory.
+    **/
     try {
       const partIds = call.request.partIds;
       const res = partIds

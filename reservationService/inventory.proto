@@ -11,6 +11,7 @@ service InventoryService {
   rpc GetRequiredParts(GetRequiredPartsRequest) returns (GetRequiredPartsResponse);
   rpc ManageStockLevels(ManageStockLevelsRequest) returns (ManageStockLevelsResponse);
   rpc UpdateRepairType(UpdateRepairTypeRequest) returns (UpdateRepairTypeResponse);
+  rpc UpdatePart(UpdatePartRequest) returns (UpdatePartResponse);
 }
 
 message Empty {};
@@ -85,4 +86,14 @@ message UpdateRepairTypeRequest {
 
 message UpdateRepairTypeResponse {
   bool success = 1;
+}
+
+message UpdatePartRequest {
+  string partId = 1;
+  string partName = 2;
+  int32 quantity = 3;
+}
+
+message UpdatePartResponse {
+  PartInfo partInfo = 1;
 }

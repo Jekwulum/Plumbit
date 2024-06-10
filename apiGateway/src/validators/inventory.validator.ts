@@ -11,6 +11,16 @@ const InventoryValidator = {
     }),
   }),
 
+  updatePart: Joi.object({
+    params: Joi.object().optional(),
+    query: Joi.object().optional(),
+    body: Joi.object().keys({
+      partId: Joi.string().required(),
+      partName: Joi.string(),
+      quantity: Joi.number(),
+    }),
+  }),
+
   addRepairType: Joi.object({
     params: Joi.object().optional(),
     query: Joi.object().optional(),

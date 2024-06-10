@@ -8,6 +8,7 @@ const router = Router();
 router.use(validateJWT);
 
 router.post('/add-part', validateResource(InventoryValidator.addPart), InventoryController.AddPart);
+router.patch('/update-part', validateResource(InventoryValidator.updatePart), InventoryController.UpdatePart);
 router.post('/check-availability', validateResource(InventoryValidator.checkPartsAvailability), InventoryController.CheckPartsAvailability);
 router.post('/add-repair-type', validateResource(InventoryValidator.addRepairType), InventoryController.AddRepairType);
 router.get('/required-parts', validateResource(InventoryValidator.getRequiredParts), InventoryController.GetRequiredParts);

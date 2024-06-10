@@ -16,6 +16,8 @@ import type { ManageStockLevelsRequest as _inventoryPackage_ManageStockLevelsReq
 import type { ManageStockLevelsResponse as _inventoryPackage_ManageStockLevelsResponse, ManageStockLevelsResponse__Output as _inventoryPackage_ManageStockLevelsResponse__Output } from '../inventoryPackage/ManageStockLevelsResponse';
 import type { ReservePartsRequest as _inventoryPackage_ReservePartsRequest, ReservePartsRequest__Output as _inventoryPackage_ReservePartsRequest__Output } from '../inventoryPackage/ReservePartsRequest';
 import type { ReservePartsResponse as _inventoryPackage_ReservePartsResponse, ReservePartsResponse__Output as _inventoryPackage_ReservePartsResponse__Output } from '../inventoryPackage/ReservePartsResponse';
+import type { UpdatePartRequest as _inventoryPackage_UpdatePartRequest, UpdatePartRequest__Output as _inventoryPackage_UpdatePartRequest__Output } from '../inventoryPackage/UpdatePartRequest';
+import type { UpdatePartResponse as _inventoryPackage_UpdatePartResponse, UpdatePartResponse__Output as _inventoryPackage_UpdatePartResponse__Output } from '../inventoryPackage/UpdatePartResponse';
 import type { UpdateRepairTypeRequest as _inventoryPackage_UpdateRepairTypeRequest, UpdateRepairTypeRequest__Output as _inventoryPackage_UpdateRepairTypeRequest__Output } from '../inventoryPackage/UpdateRepairTypeRequest';
 import type { UpdateRepairTypeResponse as _inventoryPackage_UpdateRepairTypeResponse, UpdateRepairTypeResponse__Output as _inventoryPackage_UpdateRepairTypeResponse__Output } from '../inventoryPackage/UpdateRepairTypeResponse';
 
@@ -83,6 +85,15 @@ export interface InventoryServiceClient extends grpc.Client {
   reserveParts(argument: _inventoryPackage_ReservePartsRequest, options: grpc.CallOptions, callback: grpc.requestCallback<_inventoryPackage_ReservePartsResponse__Output>): grpc.ClientUnaryCall;
   reserveParts(argument: _inventoryPackage_ReservePartsRequest, callback: grpc.requestCallback<_inventoryPackage_ReservePartsResponse__Output>): grpc.ClientUnaryCall;
   
+  UpdatePart(argument: _inventoryPackage_UpdatePartRequest, metadata: grpc.Metadata, options: grpc.CallOptions, callback: grpc.requestCallback<_inventoryPackage_UpdatePartResponse__Output>): grpc.ClientUnaryCall;
+  UpdatePart(argument: _inventoryPackage_UpdatePartRequest, metadata: grpc.Metadata, callback: grpc.requestCallback<_inventoryPackage_UpdatePartResponse__Output>): grpc.ClientUnaryCall;
+  UpdatePart(argument: _inventoryPackage_UpdatePartRequest, options: grpc.CallOptions, callback: grpc.requestCallback<_inventoryPackage_UpdatePartResponse__Output>): grpc.ClientUnaryCall;
+  UpdatePart(argument: _inventoryPackage_UpdatePartRequest, callback: grpc.requestCallback<_inventoryPackage_UpdatePartResponse__Output>): grpc.ClientUnaryCall;
+  updatePart(argument: _inventoryPackage_UpdatePartRequest, metadata: grpc.Metadata, options: grpc.CallOptions, callback: grpc.requestCallback<_inventoryPackage_UpdatePartResponse__Output>): grpc.ClientUnaryCall;
+  updatePart(argument: _inventoryPackage_UpdatePartRequest, metadata: grpc.Metadata, callback: grpc.requestCallback<_inventoryPackage_UpdatePartResponse__Output>): grpc.ClientUnaryCall;
+  updatePart(argument: _inventoryPackage_UpdatePartRequest, options: grpc.CallOptions, callback: grpc.requestCallback<_inventoryPackage_UpdatePartResponse__Output>): grpc.ClientUnaryCall;
+  updatePart(argument: _inventoryPackage_UpdatePartRequest, callback: grpc.requestCallback<_inventoryPackage_UpdatePartResponse__Output>): grpc.ClientUnaryCall;
+  
   UpdateRepairType(argument: _inventoryPackage_UpdateRepairTypeRequest, metadata: grpc.Metadata, options: grpc.CallOptions, callback: grpc.requestCallback<_inventoryPackage_UpdateRepairTypeResponse__Output>): grpc.ClientUnaryCall;
   UpdateRepairType(argument: _inventoryPackage_UpdateRepairTypeRequest, metadata: grpc.Metadata, callback: grpc.requestCallback<_inventoryPackage_UpdateRepairTypeResponse__Output>): grpc.ClientUnaryCall;
   UpdateRepairType(argument: _inventoryPackage_UpdateRepairTypeRequest, options: grpc.CallOptions, callback: grpc.requestCallback<_inventoryPackage_UpdateRepairTypeResponse__Output>): grpc.ClientUnaryCall;
@@ -109,6 +120,8 @@ export interface InventoryServiceHandlers extends grpc.UntypedServiceImplementat
   
   ReserveParts: grpc.handleUnaryCall<_inventoryPackage_ReservePartsRequest__Output, _inventoryPackage_ReservePartsResponse>;
   
+  UpdatePart: grpc.handleUnaryCall<_inventoryPackage_UpdatePartRequest__Output, _inventoryPackage_UpdatePartResponse>;
+  
   UpdateRepairType: grpc.handleUnaryCall<_inventoryPackage_UpdateRepairTypeRequest__Output, _inventoryPackage_UpdateRepairTypeResponse>;
   
 }
@@ -121,5 +134,6 @@ export interface InventoryServiceDefinition extends grpc.ServiceDefinition {
   GetRequiredParts: MethodDefinition<_inventoryPackage_GetRequiredPartsRequest, _inventoryPackage_GetRequiredPartsResponse, _inventoryPackage_GetRequiredPartsRequest__Output, _inventoryPackage_GetRequiredPartsResponse__Output>
   ManageStockLevels: MethodDefinition<_inventoryPackage_ManageStockLevelsRequest, _inventoryPackage_ManageStockLevelsResponse, _inventoryPackage_ManageStockLevelsRequest__Output, _inventoryPackage_ManageStockLevelsResponse__Output>
   ReserveParts: MethodDefinition<_inventoryPackage_ReservePartsRequest, _inventoryPackage_ReservePartsResponse, _inventoryPackage_ReservePartsRequest__Output, _inventoryPackage_ReservePartsResponse__Output>
+  UpdatePart: MethodDefinition<_inventoryPackage_UpdatePartRequest, _inventoryPackage_UpdatePartResponse, _inventoryPackage_UpdatePartRequest__Output, _inventoryPackage_UpdatePartResponse__Output>
   UpdateRepairType: MethodDefinition<_inventoryPackage_UpdateRepairTypeRequest, _inventoryPackage_UpdateRepairTypeResponse, _inventoryPackage_UpdateRepairTypeRequest__Output, _inventoryPackage_UpdateRepairTypeResponse__Output>
 }

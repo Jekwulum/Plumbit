@@ -14,7 +14,7 @@ _sym_db = _symbol_database.Default()
 
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x0finventory.proto\x12\x10inventoryPackage\">\n\x08PartInfo\x12\x0e\n\x06partId\x18\x01 \x01(\t\x12\x10\n\x08partName\x18\x02 \x01(\t\x12\x10\n\x08quantity\x18\x03 \x01(\x05\"$\n\x11\x43heckPartsRequest\x12\x0f\n\x07partIds\x18\x01 \x03(\t\"C\n\x12\x43heckPartsResponse\x12-\n\tpartsInfo\x18\x01 \x03(\x0b\x32\x1a.inventoryPackage.PartInfo\"\xb6\x01\n\x13ReservePartsRequest\x12\x15\n\rreservationId\x18\x01 \x01(\t\x12Q\n\x0epartsToReserve\x18\x02 \x03(\x0b\x32\x39.inventoryPackage.ReservePartsRequest.PartsToReserveEntry\x1a\x35\n\x13PartsToReserveEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12\r\n\x05value\x18\x02 \x01(\x05:\x02\x38\x01\"8\n\x14ReservePartsResponse\x12\x0f\n\x07success\x18\x01 \x01(\x08\x12\x0f\n\x07message\x18\x02 \x01(\t\"-\n\x17GetRequiredPartsRequest\x12\x12\n\nrepairType\x18\x01 \x01(\t\"I\n\x18GetRequiredPartsResponse\x12-\n\tpartsInfo\x18\x01 \x03(\x0b\x32\x1a.inventoryPackage.PartInfo\"\xa6\x01\n\x18ManageStockLevelsRequest\x12T\n\rpartsToUpdate\x18\x01 \x03(\x0b\x32=.inventoryPackage.ManageStockLevelsRequest.PartsToUpdateEntry\x1a\x34\n\x12PartsToUpdateEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12\r\n\x05value\x18\x02 \x01(\x05:\x02\x38\x01\"=\n\x19ManageStockLevelsResponse\x12\x0f\n\x07success\x18\x01 \x01(\x08\x12\x0f\n\x07message\x18\x02 \x01(\t\"4\n\x0e\x41\x64\x64PartRequest\x12\x10\n\x08partName\x18\x01 \x01(\t\x12\x10\n\x08quantity\x18\x02 \x01(\x05\"?\n\x0f\x41\x64\x64PartResponse\x12,\n\x08partInfo\x18\x01 \x01(\x0b\x32\x1a.inventoryPackage.PartInfo\"A\n\x14\x41\x64\x64RepairTypeRequest\x12\x12\n\nrepairType\x18\x01 \x01(\t\x12\x15\n\rrequiredParts\x18\x02 \x03(\t\"(\n\x15\x41\x64\x64RepairTypeResponse\x12\x0f\n\x07success\x18\x01 \x01(\x08\"-\n\x16GetRepairTypesResponse\x12\x13\n\x0brepairTypes\x18\x01 \x03(\t\"\x07\n\x05\x45mpty2\xb6\x05\n\x10InventoryService\x12N\n\x07\x41\x64\x64Part\x12 .inventoryPackage.AddPartRequest\x1a!.inventoryPackage.AddPartResponse\x12`\n\rAddRepairType\x12&.inventoryPackage.AddRepairTypeRequest\x1a\'.inventoryPackage.AddRepairTypeResponse\x12S\n\x0eGetRepairTypes\x12\x17.inventoryPackage.Empty\x1a(.inventoryPackage.GetRepairTypesResponse\x12\x63\n\x16\x43heckPartsAvailability\x12#.inventoryPackage.CheckPartsRequest\x1a$.inventoryPackage.CheckPartsResponse\x12]\n\x0cReserveParts\x12%.inventoryPackage.ReservePartsRequest\x1a&.inventoryPackage.ReservePartsResponse\x12i\n\x10GetRequiredParts\x12).inventoryPackage.GetRequiredPartsRequest\x1a*.inventoryPackage.GetRequiredPartsResponse\x12l\n\x11ManageStockLevels\x12*.inventoryPackage.ManageStockLevelsRequest\x1a+.inventoryPackage.ManageStockLevelsResponseb\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x0finventory.proto\x12\x10inventoryPackage\"\x07\n\x05\x45mpty\">\n\x08PartInfo\x12\x0e\n\x06partId\x18\x01 \x01(\t\x12\x10\n\x08partName\x18\x02 \x01(\t\x12\x10\n\x08quantity\x18\x03 \x01(\x05\"$\n\x11\x43heckPartsRequest\x12\x0f\n\x07partIds\x18\x01 \x03(\t\"C\n\x12\x43heckPartsResponse\x12-\n\tpartsInfo\x18\x01 \x03(\x0b\x32\x1a.inventoryPackage.PartInfo\"\xb6\x01\n\x13ReservePartsRequest\x12\x15\n\rreservationId\x18\x01 \x01(\t\x12Q\n\x0epartsToReserve\x18\x02 \x03(\x0b\x32\x39.inventoryPackage.ReservePartsRequest.PartsToReserveEntry\x1a\x35\n\x13PartsToReserveEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12\r\n\x05value\x18\x02 \x01(\x05:\x02\x38\x01\"8\n\x14ReservePartsResponse\x12\x0f\n\x07success\x18\x01 \x01(\x08\x12\x0f\n\x07message\x18\x02 \x01(\t\"-\n\x17GetRequiredPartsRequest\x12\x12\n\nrepairType\x18\x01 \x01(\t\"I\n\x18GetRequiredPartsResponse\x12-\n\tpartsInfo\x18\x01 \x03(\x0b\x32\x1a.inventoryPackage.PartInfo\"\xa6\x01\n\x18ManageStockLevelsRequest\x12T\n\rpartsToUpdate\x18\x01 \x03(\x0b\x32=.inventoryPackage.ManageStockLevelsRequest.PartsToUpdateEntry\x1a\x34\n\x12PartsToUpdateEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12\r\n\x05value\x18\x02 \x01(\x05:\x02\x38\x01\"=\n\x19ManageStockLevelsResponse\x12\x0f\n\x07success\x18\x01 \x01(\x08\x12\x0f\n\x07message\x18\x02 \x01(\t\"4\n\x0e\x41\x64\x64PartRequest\x12\x10\n\x08partName\x18\x01 \x01(\t\x12\x10\n\x08quantity\x18\x02 \x01(\x05\"?\n\x0f\x41\x64\x64PartResponse\x12,\n\x08partInfo\x18\x01 \x01(\x0b\x32\x1a.inventoryPackage.PartInfo\"A\n\x14\x41\x64\x64RepairTypeRequest\x12\x12\n\nrepairType\x18\x01 \x01(\t\x12\x15\n\rrequiredParts\x18\x02 \x03(\t\"(\n\x15\x41\x64\x64RepairTypeResponse\x12\x0f\n\x07success\x18\x01 \x01(\x08\"-\n\x16GetRepairTypesResponse\x12\x13\n\x0brepairTypes\x18\x01 \x03(\t\"D\n\x17UpdateRepairTypeRequest\x12\x12\n\nrepairType\x18\x01 \x01(\t\x12\x15\n\rrequiredParts\x18\x02 \x03(\t\"+\n\x18UpdateRepairTypeResponse\x12\x0f\n\x07success\x18\x01 \x01(\x08\"G\n\x11UpdatePartRequest\x12\x0e\n\x06partId\x18\x01 \x01(\t\x12\x10\n\x08partName\x18\x02 \x01(\t\x12\x10\n\x08quantity\x18\x03 \x01(\x05\"B\n\x12UpdatePartResponse\x12,\n\x08partInfo\x18\x01 \x01(\x0b\x32\x1a.inventoryPackage.PartInfo2\xfa\x06\n\x10InventoryService\x12N\n\x07\x41\x64\x64Part\x12 .inventoryPackage.AddPartRequest\x1a!.inventoryPackage.AddPartResponse\x12`\n\rAddRepairType\x12&.inventoryPackage.AddRepairTypeRequest\x1a\'.inventoryPackage.AddRepairTypeResponse\x12S\n\x0eGetRepairTypes\x12\x17.inventoryPackage.Empty\x1a(.inventoryPackage.GetRepairTypesResponse\x12\x63\n\x16\x43heckPartsAvailability\x12#.inventoryPackage.CheckPartsRequest\x1a$.inventoryPackage.CheckPartsResponse\x12]\n\x0cReserveParts\x12%.inventoryPackage.ReservePartsRequest\x1a&.inventoryPackage.ReservePartsResponse\x12i\n\x10GetRequiredParts\x12).inventoryPackage.GetRequiredPartsRequest\x1a*.inventoryPackage.GetRequiredPartsResponse\x12l\n\x11ManageStockLevels\x12*.inventoryPackage.ManageStockLevelsRequest\x1a+.inventoryPackage.ManageStockLevelsResponse\x12i\n\x10UpdateRepairType\x12).inventoryPackage.UpdateRepairTypeRequest\x1a*.inventoryPackage.UpdateRepairTypeResponse\x12W\n\nUpdatePart\x12#.inventoryPackage.UpdatePartRequest\x1a$.inventoryPackage.UpdatePartResponseb\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
@@ -25,40 +25,48 @@ if not _descriptor._USE_C_DESCRIPTORS:
   _globals['_RESERVEPARTSREQUEST_PARTSTORESERVEENTRY']._serialized_options = b'8\001'
   _globals['_MANAGESTOCKLEVELSREQUEST_PARTSTOUPDATEENTRY']._loaded_options = None
   _globals['_MANAGESTOCKLEVELSREQUEST_PARTSTOUPDATEENTRY']._serialized_options = b'8\001'
-  _globals['_PARTINFO']._serialized_start=37
-  _globals['_PARTINFO']._serialized_end=99
-  _globals['_CHECKPARTSREQUEST']._serialized_start=101
-  _globals['_CHECKPARTSREQUEST']._serialized_end=137
-  _globals['_CHECKPARTSRESPONSE']._serialized_start=139
-  _globals['_CHECKPARTSRESPONSE']._serialized_end=206
-  _globals['_RESERVEPARTSREQUEST']._serialized_start=209
-  _globals['_RESERVEPARTSREQUEST']._serialized_end=391
-  _globals['_RESERVEPARTSREQUEST_PARTSTORESERVEENTRY']._serialized_start=338
-  _globals['_RESERVEPARTSREQUEST_PARTSTORESERVEENTRY']._serialized_end=391
-  _globals['_RESERVEPARTSRESPONSE']._serialized_start=393
-  _globals['_RESERVEPARTSRESPONSE']._serialized_end=449
-  _globals['_GETREQUIREDPARTSREQUEST']._serialized_start=451
-  _globals['_GETREQUIREDPARTSREQUEST']._serialized_end=496
-  _globals['_GETREQUIREDPARTSRESPONSE']._serialized_start=498
-  _globals['_GETREQUIREDPARTSRESPONSE']._serialized_end=571
-  _globals['_MANAGESTOCKLEVELSREQUEST']._serialized_start=574
-  _globals['_MANAGESTOCKLEVELSREQUEST']._serialized_end=740
-  _globals['_MANAGESTOCKLEVELSREQUEST_PARTSTOUPDATEENTRY']._serialized_start=688
-  _globals['_MANAGESTOCKLEVELSREQUEST_PARTSTOUPDATEENTRY']._serialized_end=740
-  _globals['_MANAGESTOCKLEVELSRESPONSE']._serialized_start=742
-  _globals['_MANAGESTOCKLEVELSRESPONSE']._serialized_end=803
-  _globals['_ADDPARTREQUEST']._serialized_start=805
-  _globals['_ADDPARTREQUEST']._serialized_end=857
-  _globals['_ADDPARTRESPONSE']._serialized_start=859
-  _globals['_ADDPARTRESPONSE']._serialized_end=922
-  _globals['_ADDREPAIRTYPEREQUEST']._serialized_start=924
-  _globals['_ADDREPAIRTYPEREQUEST']._serialized_end=989
-  _globals['_ADDREPAIRTYPERESPONSE']._serialized_start=991
-  _globals['_ADDREPAIRTYPERESPONSE']._serialized_end=1031
-  _globals['_GETREPAIRTYPESRESPONSE']._serialized_start=1033
-  _globals['_GETREPAIRTYPESRESPONSE']._serialized_end=1078
-  _globals['_EMPTY']._serialized_start=1080
-  _globals['_EMPTY']._serialized_end=1087
-  _globals['_INVENTORYSERVICE']._serialized_start=1090
-  _globals['_INVENTORYSERVICE']._serialized_end=1784
+  _globals['_EMPTY']._serialized_start=37
+  _globals['_EMPTY']._serialized_end=44
+  _globals['_PARTINFO']._serialized_start=46
+  _globals['_PARTINFO']._serialized_end=108
+  _globals['_CHECKPARTSREQUEST']._serialized_start=110
+  _globals['_CHECKPARTSREQUEST']._serialized_end=146
+  _globals['_CHECKPARTSRESPONSE']._serialized_start=148
+  _globals['_CHECKPARTSRESPONSE']._serialized_end=215
+  _globals['_RESERVEPARTSREQUEST']._serialized_start=218
+  _globals['_RESERVEPARTSREQUEST']._serialized_end=400
+  _globals['_RESERVEPARTSREQUEST_PARTSTORESERVEENTRY']._serialized_start=347
+  _globals['_RESERVEPARTSREQUEST_PARTSTORESERVEENTRY']._serialized_end=400
+  _globals['_RESERVEPARTSRESPONSE']._serialized_start=402
+  _globals['_RESERVEPARTSRESPONSE']._serialized_end=458
+  _globals['_GETREQUIREDPARTSREQUEST']._serialized_start=460
+  _globals['_GETREQUIREDPARTSREQUEST']._serialized_end=505
+  _globals['_GETREQUIREDPARTSRESPONSE']._serialized_start=507
+  _globals['_GETREQUIREDPARTSRESPONSE']._serialized_end=580
+  _globals['_MANAGESTOCKLEVELSREQUEST']._serialized_start=583
+  _globals['_MANAGESTOCKLEVELSREQUEST']._serialized_end=749
+  _globals['_MANAGESTOCKLEVELSREQUEST_PARTSTOUPDATEENTRY']._serialized_start=697
+  _globals['_MANAGESTOCKLEVELSREQUEST_PARTSTOUPDATEENTRY']._serialized_end=749
+  _globals['_MANAGESTOCKLEVELSRESPONSE']._serialized_start=751
+  _globals['_MANAGESTOCKLEVELSRESPONSE']._serialized_end=812
+  _globals['_ADDPARTREQUEST']._serialized_start=814
+  _globals['_ADDPARTREQUEST']._serialized_end=866
+  _globals['_ADDPARTRESPONSE']._serialized_start=868
+  _globals['_ADDPARTRESPONSE']._serialized_end=931
+  _globals['_ADDREPAIRTYPEREQUEST']._serialized_start=933
+  _globals['_ADDREPAIRTYPEREQUEST']._serialized_end=998
+  _globals['_ADDREPAIRTYPERESPONSE']._serialized_start=1000
+  _globals['_ADDREPAIRTYPERESPONSE']._serialized_end=1040
+  _globals['_GETREPAIRTYPESRESPONSE']._serialized_start=1042
+  _globals['_GETREPAIRTYPESRESPONSE']._serialized_end=1087
+  _globals['_UPDATEREPAIRTYPEREQUEST']._serialized_start=1089
+  _globals['_UPDATEREPAIRTYPEREQUEST']._serialized_end=1157
+  _globals['_UPDATEREPAIRTYPERESPONSE']._serialized_start=1159
+  _globals['_UPDATEREPAIRTYPERESPONSE']._serialized_end=1202
+  _globals['_UPDATEPARTREQUEST']._serialized_start=1204
+  _globals['_UPDATEPARTREQUEST']._serialized_end=1275
+  _globals['_UPDATEPARTRESPONSE']._serialized_start=1277
+  _globals['_UPDATEPARTRESPONSE']._serialized_end=1343
+  _globals['_INVENTORYSERVICE']._serialized_start=1346
+  _globals['_INVENTORYSERVICE']._serialized_end=2236
 # @@protoc_insertion_point(module_scope)

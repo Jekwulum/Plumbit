@@ -74,6 +74,16 @@ class InventoryServiceStub(object):
                 request_serializer=inventory__pb2.ManageStockLevelsRequest.SerializeToString,
                 response_deserializer=inventory__pb2.ManageStockLevelsResponse.FromString,
                 _registered_method=True)
+        self.UpdateRepairType = channel.unary_unary(
+                '/inventoryPackage.InventoryService/UpdateRepairType',
+                request_serializer=inventory__pb2.UpdateRepairTypeRequest.SerializeToString,
+                response_deserializer=inventory__pb2.UpdateRepairTypeResponse.FromString,
+                _registered_method=True)
+        self.UpdatePart = channel.unary_unary(
+                '/inventoryPackage.InventoryService/UpdatePart',
+                request_serializer=inventory__pb2.UpdatePartRequest.SerializeToString,
+                response_deserializer=inventory__pb2.UpdatePartResponse.FromString,
+                _registered_method=True)
 
 
 class InventoryServiceServicer(object):
@@ -121,6 +131,18 @@ class InventoryServiceServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def UpdateRepairType(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def UpdatePart(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
 
 def add_InventoryServiceServicer_to_server(servicer, server):
     rpc_method_handlers = {
@@ -158,6 +180,16 @@ def add_InventoryServiceServicer_to_server(servicer, server):
                     servicer.ManageStockLevels,
                     request_deserializer=inventory__pb2.ManageStockLevelsRequest.FromString,
                     response_serializer=inventory__pb2.ManageStockLevelsResponse.SerializeToString,
+            ),
+            'UpdateRepairType': grpc.unary_unary_rpc_method_handler(
+                    servicer.UpdateRepairType,
+                    request_deserializer=inventory__pb2.UpdateRepairTypeRequest.FromString,
+                    response_serializer=inventory__pb2.UpdateRepairTypeResponse.SerializeToString,
+            ),
+            'UpdatePart': grpc.unary_unary_rpc_method_handler(
+                    servicer.UpdatePart,
+                    request_deserializer=inventory__pb2.UpdatePartRequest.FromString,
+                    response_serializer=inventory__pb2.UpdatePartResponse.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -349,6 +381,60 @@ class InventoryService(object):
             '/inventoryPackage.InventoryService/ManageStockLevels',
             inventory__pb2.ManageStockLevelsRequest.SerializeToString,
             inventory__pb2.ManageStockLevelsResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def UpdateRepairType(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/inventoryPackage.InventoryService/UpdateRepairType',
+            inventory__pb2.UpdateRepairTypeRequest.SerializeToString,
+            inventory__pb2.UpdateRepairTypeResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def UpdatePart(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/inventoryPackage.InventoryService/UpdatePart',
+            inventory__pb2.UpdatePartRequest.SerializeToString,
+            inventory__pb2.UpdatePartResponse.FromString,
             options,
             channel_credentials,
             insecure,
