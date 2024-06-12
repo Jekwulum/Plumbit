@@ -85,6 +85,19 @@ const ReservationController = {
       else res.status(200).json({ data: result });
     });
   },
+
+  GetPlumberAppointments: async (req: Request, res: Response) => {
+    type QueryParams = { id: string, date: string };
+    const { id: plumberId, date } = req.query as QueryParams;
+
+    ReservationClient.GetPlumberAppointments({ plumberId, date }, (err: ServiceError | null, result) => {
+      if (err) {
+        appLogger.error(err.message);
+        res.status(500).json({ message: `${err.message}` });
+      }
+      else res.status(200).json({ data: result });
+    });
+  },
 };
 
 export default ReservationController;

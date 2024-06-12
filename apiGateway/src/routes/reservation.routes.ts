@@ -7,6 +7,7 @@ import validateResource from "../validators/validateResource";
 const router = Router();
 router.use(validateJWT);
 
+router.get('/plumber-appointments', validateResource(ReservationValidator.getPlumberAppointments), ReservationController.GetPlumberAppointments);
 router.get('/', validateResource(ReservationValidator.getReservations), ReservationController.GetReservations);
 router.get('/:id', validateResource(ReservationValidator.getReservation), ReservationController.GetReservation);
 router.post('/', validateResource(ReservationValidator.createReservation), ReservationController.CreateReservation);

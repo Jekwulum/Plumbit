@@ -2,7 +2,7 @@ import uuid
 import grpc
 import psycopg2
 import os
-from datetime import datetime
+from datetime import datetime, timedelta
 from google.protobuf.json_format import MessageToDict
 
 from psycopg2.extras import RealDictCursor
@@ -72,22 +72,22 @@ class ReservationService():
         reservation_id = str(uuid.uuid4())
         created_at = updated_at = datetime.now().date()
 
-        parts_response = self.inventory_stub.GetRequiredParts(
-            inventory_pb2.GetRequiredPartsRequest(
-                repairType=request.repair_type)
-        )
+        # parts_response = self.inventory_stub.GetRequiredParts(
+        #     inventory_pb2.GetRequiredPartsRequest(
+        #         repairType=request.repair_type)
+        # )
 
-        partsInfo = MessageToDict(parts_response)
-        # parts_to_reserve = {}
-        for partInfo in partsInfo['partsInfo']:
-            partId = partInfo['partId']
-            quantity = partInfo['quantity']
+        # partsInfo = MessageToDict(parts_response)
+        # # parts_to_reserve = {}
+        # for partInfo in partsInfo['partsInfo']:
+        #     partId = partInfo['partId']
+        #     quantity = partInfo['quantity']
 
-            if quantity <= 0:
-                context.set_code(grpc.StatusCode.FAILED_PRECONDITION)
-                context.set_details(
-                    f"Part {partId} --> ({partInfo['partName']}) is out of stock")
-                return reservation_pb2.ReservationResponse()
+        #     if quantity <= 0:
+        #         context.set_code(grpc.StatusCode.FAILED_PRECONDITION)
+        #         context.set_details(
+        #             f"Part {partId} --> ({partInfo['partName']}) is out of stock")
+        #         return reservation_pb2.ReservationResponse()
             # parts_to_reserve[partId] = quantity
         
         # Reserve parts
@@ -109,8 +109,7 @@ class ReservationService():
                                         request.date, created_at, updated_at)
                                 )
             reservation = self.cursor.fetchone()
-            # self.conn.commit()
-            print(reservation)
+            self.conn.commit()
 
             response = self.handle_reservation_response(reservation)
             return response
@@ -224,4 +223,54 @@ class ReservationService():
             print("Error while deleting from Database: ", error)
             context.set_code(grpc.StatusCode.INTERNAL)
             context.set_details(
-                f"Error while deleting from Database: {str(error)}")
+                    f"Error while deleting from Database: {str(error)}")
+
+    def GetPlumberAppointments(self, request, context):
+        """Get the plumber's next day's appointments. If a date is passed, get for that date"""
+        print("here")
+
+        if hasattr(request, 'date') and request.date:
+            date = request.date
+        else:
+            # Get the next day's date
+            date = (datetime.now().date() + timedelta(days=1)).strftime("%Y-%m-%d")
+        
+        query = "SELECT * FROM reservations WHERE plumber_id = %s AND date = %s;"
+        self.cursor.execute(query, (request.plumber_id, date))
+        appointments = self.cursor.fetchall()
+
+        appointment_info = []
+        
+        # Retrieve the required parts for each appointment.
+        for appointment in appointments:
+            repair_type = appointment['repair_type']
+            print('repair type: ', repair_type)
+            inventory_request = inventory_pb2.GetRequiredPartsRequest(repairType=repair_type)
+            inventory_response = self.inventory_stub.GetRequiredParts(inventory_request)
+            inventory_response = MessageToDict(inventory_response)
+
+            available_parts = []
+            unavailable_parts = []
+            for part in inventory_response['partsInfo']:
+                print('part: ', part)
+                part.setdefault('quantity', 0)
+                if part['quantity'] > 0:
+                    available_parts.append(part)
+                else:
+                    unavailable_parts.append(part)
+            
+            appointment_info.append(
+                reservation_pb2.AppointmentInfo(
+                    reservation_id=appointment['reservation_id'],
+                    customer_id = appointment['customer_id'],
+                    plumber_id = appointment['plumber_id'],
+                    repair_type = appointment['repair_type'],
+                    description = appointment['description'],
+                    status = appointment['status'],
+                    date = str(appointment['date']),
+                    available_parts = available_parts,
+                    unavailable_parts = unavailable_parts
+                )
+            )
+
+        return reservation_pb2.GetPlumberAppointmentsResponse(appointments=appointment_info)

@@ -80,6 +80,15 @@ const ReservationValidator = {
     query: Joi.object().optional(),
     body: Joi.object().optional(),
   }),
+
+  getPlumberAppointments: Joi.object({
+    params: Joi.object().optional(),
+    query: Joi.object().keys({
+      id: Joi.string().required(), // reservationId
+      date: Joi.date()
+    }),
+    body: Joi.object().optional(),
+  }),
 };
 
 export default ReservationValidator;

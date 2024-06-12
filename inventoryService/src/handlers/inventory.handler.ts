@@ -43,7 +43,8 @@ const InventoryHandler: InventoryServiceHandlers = {
 
   UpdatePart: async (call: grpc.ServerUnaryCall<UpdatePartRequest, UpdatePartResponse>, callback: grpc.sendUnaryData<UpdatePartResponse>) => {
     try {
-      const { partId, partName, quantity } = call.request;
+      const { partId, partName } = call.request;
+      const quantity = call.request.quantity as Number; // declared separately because destructuring doesn't work when the value is 0
       let query = 'UPDATE parts SET updated_at = CURRENT_TIMESTAMP';
       let params: (string | Number)[] = [partId as string];
 
@@ -52,7 +53,7 @@ const InventoryHandler: InventoryServiceHandlers = {
         params.push(partName);
       }
 
-      if (quantity) {
+      if (quantity || call.request.quantity === 0) {
         query = `${query}, quantity = $${params.length + 1}`;
         params.push(quantity);
       }

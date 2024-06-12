@@ -7,7 +7,8 @@ service ReservationService {
   rpc GetReservation (GetReservationRequest) returns (ReservationResponse);
   rpc GetReservations (GetReservationsRequest) returns (ReservationsResponse);
   rpc UpdateReservation (UpdateReservationRequest) returns (ReservationResponse);
-  rpc DeleteReservation (DeleteReservationRequest) returns (EmptyResponse);
+  rpc DeleteReservation (DeleteReservationRequest) returns (Empty);
+  rpc GetPlumberAppointments(GetPlumberAppointmentsRequest) returns (GetPlumberAppointmentsResponse);
 }
 
 message CreateReservationRequest {
@@ -58,4 +59,31 @@ message ReservationsResponse {
   repeated ReservationResponse reservations = 1;
 }
 
-message EmptyResponse {}
+message Empty {}
+
+message PartInfo {
+  string partId = 1;
+  string partName = 2;
+  int32 quantity = 3;
+}
+
+message AppointmentInfo {
+  string reservation_id = 1;
+  string customer_id = 2;
+  string plumber_id = 3;
+  string repair_type = 4;
+  string description = 5;
+  string status = 6;
+  string date = 7;
+  repeated PartInfo available_parts = 8;
+  repeated PartInfo unavailable_parts = 9;
+}
+
+message GetPlumberAppointmentsRequest {
+  string plumber_id = 1;
+  string date = 2;
+}
+
+message GetPlumberAppointmentsResponse {
+  repeated AppointmentInfo appointments = 1;
+}
