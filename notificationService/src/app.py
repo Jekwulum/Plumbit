@@ -53,7 +53,6 @@ class NotificationService():
                 query['receiver_id'] = request.receiver_id
 
             if hasattr(request, 'status') and request.status:
-                print('sattus')
                 query['status'] = request.status
 
             notifications = self.collection.find(query)
