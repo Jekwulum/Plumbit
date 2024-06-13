@@ -42,6 +42,7 @@ message GetNotificationRequest {
 
 message GetNotificationsRequest {
   string receiver_id = 1;
+  string status = 2;
 }
 
 message GetNotificationsResponse {

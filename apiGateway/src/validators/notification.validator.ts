@@ -15,7 +15,9 @@ const NotificationValidator = {
     params: Joi.object().keys({
       id: Joi.string().required(),
     }),
-    query: Joi.object().optional(),
+    query: Joi.object().keys({
+      status: Joi.string().valid('read', 'unread'),
+    }),
     body: Joi.object().optional(),
   }),
 };

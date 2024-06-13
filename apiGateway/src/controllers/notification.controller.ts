@@ -18,8 +18,8 @@ const NotificationController = {
 
   GetNotifications: async (req: Request, res: Response) => {
     const { id: receiverId } = req.params;
-    console.log('here');
-    NotificationClient.GetNotifications({ receiverId }, (err: ServiceError | null, result) => {
+    const { status } = req.query;
+    NotificationClient.GetNotifications({ receiverId, status: status as string }, (err: ServiceError | null, result) => {
       if (err) {
         appLogger.error(err.message);
         res.status(500).json({ message: `${err.message}` });

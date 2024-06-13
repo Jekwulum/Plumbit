@@ -1,4 +1,3 @@
-import uuid
 import os
 from datetime import datetime
 from bson.objectid import ObjectId
@@ -49,14 +48,16 @@ class NotificationService():
 
     def GetNotifications(self, request, context):
         try:
-            if hasattr(request, "receiver_id") and request.receiver_id:
-                print('here 1')
-                notifications = self.collection.find(
-                    {"receiver_id": request.receiver_id})
-            else:
-                print('here 2')
-                notifications = self.collection.find()
-                print(notifications)
+            query = {}
+            if hasattr(request, 'receiver_id') and request.receiver_id:
+                query['receiver_id'] = request.receiver_id
+
+            if hasattr(request, 'status') and request.status:
+                print('sattus')
+                query['status'] = request.status
+
+            notifications = self.collection.find(query)
+
             return notification_pb2.GetNotificationsResponse(
                 notifications=[self._handle_notification_response(
                     notification) for notification in notifications]
@@ -68,35 +69,54 @@ class NotificationService():
             return notification_pb2.GetNotificationsResponse()
 
     def GetNotification(self, request, context):
-        notification = self.collection.find_one(
-            {"_id": ObjectId(request.notification_id)})
-        if not notification:
-            context.set_code(grpc.StatusCode.NOT_FOUND)
-            context.set_details("Notification not found.")
+        try:
+            notification = self.collection.find_one(
+                {"_id": ObjectId(request.notification_id)})
+            if not notification:
+                context.set_code(grpc.StatusCode.NOT_FOUND)
+                context.set_details("Notification not found.")
+                return notification_pb2.NotificationResponse()
+            return self._handle_notification_response(notification)
+        except Exception as error:
+            print(f"Error fetching notification: {error}")
+            context.set_code(grpc.StatusCode.INTERNAL)  # type: ignore
+            context.set_details(f"Error fetching notification: {error}")
             return notification_pb2.NotificationResponse()
-        return self._handle_notification_response(notification)
 
     def UpdateNotification(self, request, context):
-        updated_at = datetime.now().isoformat()
-        notification = self.collection.find_one_and_update(
-            {"_id": ObjectId(request.notification_id)},
-            {"$set": {"status": status.get("READ"), "updated_at": updated_at}},
-            return_document=True
-        )
-        if not notification:
-            context.set_code(grpc.StatusCode.NOT_FOUND)
-            context.set_details("Notification not found.")
+        try:
+            updated_at = datetime.now().isoformat()
+            notification = self.collection.find_one_and_update(
+                {"_id": ObjectId(request.notification_id)},
+                {"$set": {"status": status.get(
+                    "READ"), "updated_at": updated_at}},
+                return_document=True
+            )
+            if not notification:
+                context.set_code(grpc.StatusCode.NOT_FOUND)
+                context.set_details("Notification not found.")
+                return notification_pb2.NotificationResponse()
+            return self._handle_notification_response(notification)
+        except Exception as error:
+            print(f"Error updating notification: {error}")
+            context.set_code(grpc.StatusCode.INTERNAL)
+            context.set_details(f"Error updating notification: {error}")
             return notification_pb2.NotificationResponse()
-        return self._handle_notification_response(notification)
 
     def DeleteNotification(self, request, context):
-        result = self.collection.delete_one(
-            {"_id": ObjectId(request.notification_id)})
-        if result.deleted_count == 0:
-            context.set_code(grpc.StatusCode.NOT_FOUND)
-            context.set_details("Notification not found.")
+        try:
+            result = self.collection.delete_one(
+                {"_id": ObjectId(request.notification_id)})
+            if result.deleted_count == 0:
+                context.set_code(grpc.StatusCode.NOT_FOUND)
+                context.set_details("Notification not found.")
+                return notification_pb2.NotificationResponse()
+            return notification_pb2.NotificationResponse(success=True)
+        except Exception as error:
+            print(f"Error deleting notification: {error}")
+            context.set_code(grpc.StatusCode.INTERNAL)
+            context.set_details(f"Error deleting notification: {error}")
             return notification_pb2.NotificationResponse()
-        return notification_pb2.NotificationResponse(success=True)
 
     def _handle_notification_response(self, notification):
         try:

@@ -14,7 +14,7 @@ _sym_db = _symbol_database.Default()
 
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x12notification.proto\x12\x13notificationPackage\"\x98\x01\n\x0cNotification\x12\x17\n\x0fnotification_id\x18\x01 \x01(\t\x12\x11\n\tsender_id\x18\x02 \x01(\t\x12\x13\n\x0breceiver_id\x18\x03 \x01(\t\x12\x0f\n\x07message\x18\x04 \x01(\t\x12\x0e\n\x06status\x18\x05 \x01(\t\x12\x12\n\ncreated_at\x18\x06 \x01(\t\x12\x12\n\nupdated_at\x18\x07 \x01(\t\"U\n\x19\x43reateNotificationRequest\x12\x11\n\tsender_id\x18\x01 \x01(\t\x12\x13\n\x0breceiver_id\x18\x02 \x01(\t\x12\x10\n\x08scenario\x18\x03 \x01(\t\"\xa0\x01\n\x14NotificationResponse\x12\x17\n\x0fnotification_id\x18\x01 \x01(\t\x12\x11\n\tsender_id\x18\x02 \x01(\t\x12\x13\n\x0breceiver_id\x18\x03 \x01(\t\x12\x0f\n\x07message\x18\x04 \x01(\t\x12\x0e\n\x06status\x18\x05 \x01(\t\x12\x12\n\ncreated_at\x18\x06 \x01(\t\x12\x12\n\nupdated_at\x18\x07 \x01(\t\"1\n\x16GetNotificationRequest\x12\x17\n\x0fnotification_id\x18\x01 \x01(\t\".\n\x17GetNotificationsRequest\x12\x13\n\x0breceiver_id\x18\x01 \x01(\t\"\\\n\x18GetNotificationsResponse\x12@\n\rnotifications\x18\x01 \x03(\x0b\x32).notificationPackage.NotificationResponse\"-\n\x1a\x44\x65leteNotificationResponse\x12\x0f\n\x07success\x18\x01 \x01(\x08\x32\xc4\x04\n\x13NotificationService\x12o\n\x12\x43reateNotification\x12..notificationPackage.CreateNotificationRequest\x1a).notificationPackage.NotificationResponse\x12i\n\x0fGetNotification\x12+.notificationPackage.GetNotificationRequest\x1a).notificationPackage.NotificationResponse\x12o\n\x10GetNotifications\x12,.notificationPackage.GetNotificationsRequest\x1a-.notificationPackage.GetNotificationsResponse\x12l\n\x12UpdateNotification\x12+.notificationPackage.GetNotificationRequest\x1a).notificationPackage.NotificationResponse\x12r\n\x12\x44\x65leteNotification\x12+.notificationPackage.GetNotificationRequest\x1a/.notificationPackage.DeleteNotificationResponseb\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x12notification.proto\x12\x13notificationPackage\"\x98\x01\n\x0cNotification\x12\x17\n\x0fnotification_id\x18\x01 \x01(\t\x12\x11\n\tsender_id\x18\x02 \x01(\t\x12\x13\n\x0breceiver_id\x18\x03 \x01(\t\x12\x0f\n\x07message\x18\x04 \x01(\t\x12\x0e\n\x06status\x18\x05 \x01(\t\x12\x12\n\ncreated_at\x18\x06 \x01(\t\x12\x12\n\nupdated_at\x18\x07 \x01(\t\"U\n\x19\x43reateNotificationRequest\x12\x11\n\tsender_id\x18\x01 \x01(\t\x12\x13\n\x0breceiver_id\x18\x02 \x01(\t\x12\x10\n\x08scenario\x18\x03 \x01(\t\"\xa0\x01\n\x14NotificationResponse\x12\x17\n\x0fnotification_id\x18\x01 \x01(\t\x12\x11\n\tsender_id\x18\x02 \x01(\t\x12\x13\n\x0breceiver_id\x18\x03 \x01(\t\x12\x0f\n\x07message\x18\x04 \x01(\t\x12\x0e\n\x06status\x18\x05 \x01(\t\x12\x12\n\ncreated_at\x18\x06 \x01(\t\x12\x12\n\nupdated_at\x18\x07 \x01(\t\"1\n\x16GetNotificationRequest\x12\x17\n\x0fnotification_id\x18\x01 \x01(\t\">\n\x17GetNotificationsRequest\x12\x13\n\x0breceiver_id\x18\x01 \x01(\t\x12\x0e\n\x06status\x18\x02 \x01(\t\"\\\n\x18GetNotificationsResponse\x12@\n\rnotifications\x18\x01 \x03(\x0b\x32).notificationPackage.NotificationResponse\"-\n\x1a\x44\x65leteNotificationResponse\x12\x0f\n\x07success\x18\x01 \x01(\x08\x32\xc4\x04\n\x13NotificationService\x12o\n\x12\x43reateNotification\x12..notificationPackage.CreateNotificationRequest\x1a).notificationPackage.NotificationResponse\x12i\n\x0fGetNotification\x12+.notificationPackage.GetNotificationRequest\x1a).notificationPackage.NotificationResponse\x12o\n\x10GetNotifications\x12,.notificationPackage.GetNotificationsRequest\x1a-.notificationPackage.GetNotificationsResponse\x12l\n\x12UpdateNotification\x12+.notificationPackage.GetNotificationRequest\x1a).notificationPackage.NotificationResponse\x12r\n\x12\x44\x65leteNotification\x12+.notificationPackage.GetNotificationRequest\x1a/.notificationPackage.DeleteNotificationResponseb\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
@@ -30,11 +30,11 @@ if not _descriptor._USE_C_DESCRIPTORS:
   _globals['_GETNOTIFICATIONREQUEST']._serialized_start=448
   _globals['_GETNOTIFICATIONREQUEST']._serialized_end=497
   _globals['_GETNOTIFICATIONSREQUEST']._serialized_start=499
-  _globals['_GETNOTIFICATIONSREQUEST']._serialized_end=545
-  _globals['_GETNOTIFICATIONSRESPONSE']._serialized_start=547
-  _globals['_GETNOTIFICATIONSRESPONSE']._serialized_end=639
-  _globals['_DELETENOTIFICATIONRESPONSE']._serialized_start=641
-  _globals['_DELETENOTIFICATIONRESPONSE']._serialized_end=686
-  _globals['_NOTIFICATIONSERVICE']._serialized_start=689
-  _globals['_NOTIFICATIONSERVICE']._serialized_end=1269
+  _globals['_GETNOTIFICATIONSREQUEST']._serialized_end=561
+  _globals['_GETNOTIFICATIONSRESPONSE']._serialized_start=563
+  _globals['_GETNOTIFICATIONSRESPONSE']._serialized_end=655
+  _globals['_DELETENOTIFICATIONRESPONSE']._serialized_start=657
+  _globals['_DELETENOTIFICATIONRESPONSE']._serialized_end=702
+  _globals['_NOTIFICATIONSERVICE']._serialized_start=705
+  _globals['_NOTIFICATIONSERVICE']._serialized_end=1285
 # @@protoc_insertion_point(module_scope)
