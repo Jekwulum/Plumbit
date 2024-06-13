@@ -6,16 +6,12 @@ from datetime import datetime, timedelta
 from google.protobuf.json_format import MessageToDict
 
 from psycopg2.extras import RealDictCursor
-from protobufs import reservation_pb2, inventory_pb2, inventory_pb2_grpc
-#
-
-db_connection_params = {
-    'host': os.getenv('DATABASE_HOST'),
-    'database': os.getenv('DATABASE_NAME'),
-    'user': os.getenv('DATABASE_USER'),
-    'password': os.getenv('DATABASE_PASSWORD')}
+from protobufs import (reservation_pb2, reservation_pb2, inventory_pb2, inventory_pb2_grpc,
+                        notification_pb2, notification_pb2_grpc )
+from configs import db_connection_params, message_templates
 
 INVENTORY_SERVICE_PORT = os.getenv('INVENTORY_SERVICE_PORT', 4003)
+NOTIFICATION_SERVICE_PORT = os.getenv('NOTIFICATION_SERVICE_PORT', 4004)
 
 
 class ReservationService():
@@ -31,11 +27,18 @@ class ReservationService():
                 f"localhost:{INVENTORY_SERVICE_PORT}")
             self.inventory_stub = inventory_pb2_grpc.InventoryServiceStub(
                 self.inventory_channel)
+
+            self.notification_channel = grpc.insecure_channel(
+                f"localhost:{os.getenv('NOTIFICATION_SERVICE_PORT', 4004)}")
+            self.notification_stub = notification_pb2_grpc.NotificationServiceStub(
+                self.notification_channel)
+
         except (Exception, psycopg2.DatabaseError) as error:
             print("Error while connecting to PostgreSQL", error)
 
     def create_table(self):
-        query = """
+        try:
+            query = """
                     CREATE TABLE IF NOT EXISTS reservations (
                         reservation_id UUID PRIMARY KEY,
                         customer_id TEXT NOT NULL,
@@ -48,8 +51,10 @@ class ReservationService():
                         updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
                     );
                 """
-        self.cursor.execute(query)
-        self.conn.commit()
+            self.cursor.execute(query)
+            self.conn.commit()
+        except (Exception, psycopg2.DatabaseError) as error:
+            print("Error while creating table: ", error)
 
     def handle_reservation_response(self, reservation):
         try:
@@ -196,7 +201,7 @@ class ReservationService():
             print("Error while deleting from Database: ", error)
             context.set_code(grpc.StatusCode.INTERNAL)
             context.set_details(
-                    f"Error while deleting from Database: {str(error)}")
+                f"Error while deleting from Database: {str(error)}")
 
     def GetPlumberAppointments(self, request, context):
         """Get the plumber's next day's appointments. If a date is passed, get for that date"""
@@ -206,20 +211,23 @@ class ReservationService():
             date = request.date
         else:
             # Get the next day's date
-            date = (datetime.now().date() + timedelta(days=1)).strftime("%Y-%m-%d")
-        
+            date = (datetime.now().date() +
+                    timedelta(days=1)).strftime("%Y-%m-%d")
+
         query = "SELECT * FROM reservations WHERE plumber_id = %s AND date = %s;"
         self.cursor.execute(query, (request.plumber_id, date))
         appointments = self.cursor.fetchall()
 
         appointment_info = []
-        
+
         # Retrieve the required parts for each appointment.
         for appointment in appointments:
             repair_type = appointment['repair_type']
             print('repair type: ', repair_type)
-            inventory_request = inventory_pb2.GetRequiredPartsRequest(repairType=repair_type)
-            inventory_response = self.inventory_stub.GetRequiredParts(inventory_request)
+            inventory_request = inventory_pb2.GetRequiredPartsRequest(
+                repairType=repair_type)
+            inventory_response = self.inventory_stub.GetRequiredParts(
+                inventory_request)
             inventory_response = MessageToDict(inventory_response)
 
             available_parts = []
@@ -231,18 +239,18 @@ class ReservationService():
                     available_parts.append(part)
                 else:
                     unavailable_parts.append(part)
-            
+
             appointment_info.append(
                 reservation_pb2.AppointmentInfo(
                     reservation_id=appointment['reservation_id'],
-                    customer_id = appointment['customer_id'],
-                    plumber_id = appointment['plumber_id'],
-                    repair_type = appointment['repair_type'],
-                    description = appointment['description'],
-                    status = appointment['status'],
-                    date = str(appointment['date']),
-                    available_parts = available_parts,
-                    unavailable_parts = unavailable_parts
+                    customer_id=appointment['customer_id'],
+                    plumber_id=appointment['plumber_id'],
+                    repair_type=appointment['repair_type'],
+                    description=appointment['description'],
+                    status=appointment['status'],
+                    date=str(appointment['date']),
+                    available_parts=available_parts,
+                    unavailable_parts=unavailable_parts
                 )
             )
 
