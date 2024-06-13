@@ -7,8 +7,8 @@ from google.protobuf.json_format import MessageToDict
 
 from psycopg2.extras import RealDictCursor
 from protobufs import (reservation_pb2, reservation_pb2, inventory_pb2, inventory_pb2_grpc,
-                        notification_pb2, notification_pb2_grpc )
-from configs import db_connection_params, message_templates
+                       notification_pb2, notification_pb2_grpc)
+from configs import db_connection_params, scenarios
 
 INVENTORY_SERVICE_PORT = os.getenv('INVENTORY_SERVICE_PORT', 4003)
 NOTIFICATION_SERVICE_PORT = os.getenv('NOTIFICATION_SERVICE_PORT', 4004)
@@ -20,7 +20,7 @@ class ReservationService():
             self.conn = psycopg2.connect(
                 **db_connection_params, cursor_factory=RealDictCursor)
             self.cursor = self.conn.cursor()
-            self.create_table()
+            self._create_table()
             print("[Database Connection]: Connected to Plumbit Reservation Database")
 
             self.inventory_channel = grpc.insecure_channel(
@@ -35,43 +35,6 @@ class ReservationService():
 
         except (Exception, psycopg2.DatabaseError) as error:
             print("Error while connecting to PostgreSQL", error)
-
-    def create_table(self):
-        try:
-            query = """
-                    CREATE TABLE IF NOT EXISTS reservations (
-                        reservation_id UUID PRIMARY KEY,
-                        customer_id TEXT NOT NULL,
-                        plumber_id TEXT NOT NULL,
-                        repair_type TEXT NOT NULL,
-                        description TEXT,
-                        status TEXT NOT NULL,
-                        date DATE,
-                        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-                        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-                    );
-                """
-            self.cursor.execute(query)
-            self.conn.commit()
-        except (Exception, psycopg2.DatabaseError) as error:
-            print("Error while creating table: ", error)
-
-    def handle_reservation_response(self, reservation):
-        try:
-            response = reservation_pb2.ReservationResponse(
-                reservation_id=reservation['reservation_id'],
-                customer_id=reservation['customer_id'],
-                plumber_id=reservation['plumber_id'],
-                repair_type=reservation['repair_type'],
-                description=reservation['description'],
-                status=reservation['status'],
-                created_at=str(reservation['created_at']),
-                updated_at=str(reservation['updated_at']),
-                date=str(reservation['date'])
-            )
-            return response
-        except Exception as e:
-            print(e)
 
     def CreateReservation(self, request, context):
         reservation_id = str(uuid.uuid4())
@@ -89,7 +52,9 @@ class ReservationService():
             reservation = self.cursor.fetchone()
             self.conn.commit()
 
-            response = self.handle_reservation_response(reservation)
+            self._notify(sender_id=request.customer_id,
+                         receiver_id=request.plumber_id, scenario=scenarios['RESERVATION_CREATED'])
+            response = self._handle_reservation_response(reservation)
             return response
         except (Exception, psycopg2.DatabaseError) as error:
             print(f"\nError while inserting to Database: {error}")
@@ -108,7 +73,7 @@ class ReservationService():
             response = reservation_pb2.ReservationResponse()
             return response
 
-        response = self.handle_reservation_response(reservation)
+        response = self._handle_reservation_response(reservation)
         return response
 
     def GetReservations(self, request, context):
@@ -133,7 +98,7 @@ class ReservationService():
 
             responses = []
             for reservation in reservations:
-                response = self.handle_reservation_response(
+                response = self._handle_reservation_response(
                     reservation=reservation)
                 responses.append(response)
 
@@ -176,7 +141,7 @@ class ReservationService():
                 response = reservation_pb2.ReservationResponse()
                 return response
 
-            return self.handle_reservation_response(reservation)
+            return self._handle_reservation_response(reservation)
         except (Exception, psycopg2.DatabaseError) as error:
             print("Error while updating to Database: ", error)
             context.set_code(grpc.StatusCode.INTERNAL)
@@ -239,6 +204,9 @@ class ReservationService():
                     available_parts.append(part)
                 else:
                     unavailable_parts.append(part)
+            if not available_parts:
+                self._notify(sender_id=appointment['customer_id'], receiver_id=request.plumber_id,
+                             scenario=scenarios['PARTS_OUT_OF_STOCK'])
 
             appointment_info.append(
                 reservation_pb2.AppointmentInfo(
@@ -255,3 +223,48 @@ class ReservationService():
             )
 
         return reservation_pb2.GetPlumberAppointmentsResponse(appointments=appointment_info)
+
+    def _create_table(self):
+        try:
+            query = """
+                    CREATE TABLE IF NOT EXISTS reservations (
+                        reservation_id UUID PRIMARY KEY,
+                        customer_id TEXT NOT NULL,
+                        plumber_id TEXT NOT NULL,
+                        repair_type TEXT NOT NULL,
+                        description TEXT,
+                        status TEXT NOT NULL,
+                        date DATE,
+                        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                    );
+                """
+            self.cursor.execute(query)
+            self.conn.commit()
+        except (Exception, psycopg2.DatabaseError) as error:
+            print("Error while creating table: ", error)
+
+    def _handle_reservation_response(self, reservation):
+        try:
+            response = reservation_pb2.ReservationResponse(
+                reservation_id=reservation['reservation_id'],
+                customer_id=reservation['customer_id'],
+                plumber_id=reservation['plumber_id'],
+                repair_type=reservation['repair_type'],
+                description=reservation['description'],
+                status=reservation['status'],
+                created_at=str(reservation['created_at']),
+                updated_at=str(reservation['updated_at']),
+                date=str(reservation['date'])
+            )
+            return response
+        except Exception as e:
+            print(e)
+
+    def _notify(self, sender_id, receiver_id, scenario):
+        notification_request = notification_pb2.CreateNotificationRequest(
+            sender_id=sender_id,
+            receiver_id=receiver_id,
+            scenario=scenario
+        )
+        self.notification_stub.CreateNotification(notification_request)

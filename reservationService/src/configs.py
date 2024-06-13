@@ -6,9 +6,6 @@ db_connection_params = {
     'user': os.getenv('DATABASE_USER'),
     'password': os.getenv('DATABASE_PASSWORD')}
 
-message_templates = {
-    "reservation_created": "Reservation created by user {sender_id} for {receiver_id}.",
-    "reservation_updated": "Reservation updated by user {sender_id} for {receiver_id}.",
-    "parts_out_of_stock": "Some parts are out of stock for reservation by user {sender_id} for {receiver_id}.",
-    "default": "Default message"
-}
+scenarios = {"RESERVATION_CREATED": "reservation_created",
+            "RESERVATION_UPDATED": "reservation_updated",
+            "PARTS_OUT_OF_STOCK": "parts_out_of_stock"}
