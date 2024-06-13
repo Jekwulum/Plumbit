@@ -1073,7 +1073,7 @@
     "ts-node" "^10.4.0"
     "tsconfig" "^7.0.0"
 
-"ts-node@^10.4.0":
+"ts-node@^10.4.0", "ts-node@^10.9.2":
   "integrity" "sha512-f0FFpIdcHgn8zcPSbf1dRevwt047YMnaiJM3u2w2RewrB+fob/zePZcrOyQoLMMO7aBIddLcQIEK5dYjkLnGrQ=="
   "resolved" "https://registry.npmjs.org/ts-node/-/ts-node-10.9.2.tgz"
   "version" "10.9.2"

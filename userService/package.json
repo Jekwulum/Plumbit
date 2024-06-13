@@ -4,6 +4,7 @@
   "description": "User microservice for Plumbit application",
   "main": "index.js",
   "scripts": {
+    "start": "ts-node src/server.ts",
     "build": "./proto/proto-gen.sh",
     "dev": "ts-node-dev --respawn --transpile-only src/server.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -22,6 +23,7 @@
     "lodash": "^4.17.21",
     "mongoose": "^8.3.4",
     "pino": "^9.0.0",
+    "ts-node": "^10.9.2",
     "ts-node-dev": "^2.0.0",
     "typescript": "^5.4.5"
   },
