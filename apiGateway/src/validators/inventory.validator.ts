@@ -1,4 +1,3 @@
-import { get } from 'config';
 import Joi from 'joi';
 
 const InventoryValidator = {

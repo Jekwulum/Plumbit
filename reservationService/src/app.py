@@ -72,33 +72,6 @@ class ReservationService():
         reservation_id = str(uuid.uuid4())
         created_at = updated_at = datetime.now().date()
 
-        # parts_response = self.inventory_stub.GetRequiredParts(
-        #     inventory_pb2.GetRequiredPartsRequest(
-        #         repairType=request.repair_type)
-        # )
-
-        # partsInfo = MessageToDict(parts_response)
-        # # parts_to_reserve = {}
-        # for partInfo in partsInfo['partsInfo']:
-        #     partId = partInfo['partId']
-        #     quantity = partInfo['quantity']
-
-        #     if quantity <= 0:
-        #         context.set_code(grpc.StatusCode.FAILED_PRECONDITION)
-        #         context.set_details(
-        #             f"Part {partId} --> ({partInfo['partName']}) is out of stock")
-        #         return reservation_pb2.ReservationResponse()
-            # parts_to_reserve[partId] = quantity
-        
-        # Reserve parts
-        # print(parts_to_reserve)
-        # reserve_request = inventory_pb2.ReservePartsRequest(reservationId=reservation_id, partsToReserve=parts_to_reserve)
-        # reserve_response = self.inventory_stub.ReserveParts(reserve_request)
-        # if not reserve_response.success:
-        #     context.set_code(grpc.StatusCode.FAILED_PRECONDITION)
-        #     context.set_details(reserve_response.message)
-        #     return reservation_pb2.ReservationResponse()
-
         query = """
                     INSERT INTO reservations (reservation_id, customer_id, plumber_id, repair_type, description, status, date, created_at, updated_at)
                     VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s) RETURNING *;

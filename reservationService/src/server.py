@@ -3,6 +3,7 @@ import sys
 import grpc
 from dotenv import load_dotenv
 from concurrent import futures
+
 load_dotenv()
 
 sys.path.append(os.path.join(os.path.dirname(__file__), 'protobufs'))
