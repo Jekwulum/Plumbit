@@ -25,10 +25,10 @@ def main():
     network = os.getenv("NOTIFICATION_SERVICE_NETWORK")
     server.add_insecure_port(f'{network}:{PORT}')
     server.start()
-    print(f"[Server Connection]: Python gRPC server started for Notification Microservice on port {PORT}...")
+    print(f"[Server Connection]: Python gRPC server started for Notification Microservice on {network}:{PORT}...")
     server.wait_for_termination()
   except KeyboardInterrupt:
-    print(f"[Server Connection]: Python gRPC server stopped for Notification Microservice on port {PORT}...")
+    print(f"[Server Connection]: Python gRPC server stopped for Notification Microservice on port {network}:{PORT}...")
     server.stop(0)
 
 if __name__ == '__main__':

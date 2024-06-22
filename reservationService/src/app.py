@@ -7,34 +7,38 @@ from datetime import datetime, timedelta
 from google.protobuf.json_format import MessageToDict
 
 from psycopg2.extras import RealDictCursor
-from protobufs import (reservation_pb2, reservation_pb2, inventory_pb2, inventory_pb2_grpc,
-                       notification_pb2, notification_pb2_grpc)
+from protobufs import (reservation_pb2, reservation_pb2, inventory_pb2,
+                       inventory_pb2_grpc, notification_pb2, notification_pb2_grpc)
 from configs import db_connection_params, scenarios
 
 INVENTORY_SERVICE_PORT = os.getenv('INVENTORY_SERVICE_PORT', 4003)
 NOTIFICATION_SERVICE_PORT = os.getenv('NOTIFICATION_SERVICE_PORT', 4004)
 
+inventory_network = os.getenv('INVENTORY_SERVICE_NETWORK')
+notification_network = os.getenv('NOTIFICATION_SERVICE_NETWORK')
+
 
 class ReservationService():
     def __init__(self):
         max_retries = 5
-        retry_delay = 5 # 5 seconds
+        retry_delay = 5  # 5 seconds
 
         for attempt in range(1, max_retries + 1):
             try:
                 self.conn = psycopg2.connect(
                     **db_connection_params, cursor_factory=RealDictCursor)
                 self.cursor = self.conn.cursor()
-                print("[Database Connection]: Connected to Plumbit Reservation Database")
+                print(
+                    "[Database Connection]: Connected to Plumbit Reservation PostgreSQL Database")
                 self._create_table()
 
                 self.inventory_channel = grpc.insecure_channel(
-                    f"localhost:{INVENTORY_SERVICE_PORT}")
+                    f"{inventory_network}:{INVENTORY_SERVICE_PORT}")
                 self.inventory_stub = inventory_pb2_grpc.InventoryServiceStub(
                     self.inventory_channel)
 
                 self.notification_channel = grpc.insecure_channel(
-                    f"localhost:{os.getenv('NOTIFICATION_SERVICE_PORT', 4004)}")
+                    f"{notification_network}:{NOTIFICATION_SERVICE_PORT}")
                 self.notification_stub = notification_pb2_grpc.NotificationServiceStub(
                     self.notification_channel)
                 break
@@ -47,8 +51,6 @@ class ReservationService():
                 else:
                     print("Max retries reached. Could not connect to PostgreSQL.")
                     raise
-
-
 
     def CreateReservation(self, request, context):
         reservation_id = str(uuid.uuid4())
