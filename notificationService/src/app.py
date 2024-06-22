@@ -14,7 +14,6 @@ message_templates = {
 }
 
 status = {"UNREAD": "unread", "READ": "read"}
-db_urls = {"local": os.getenv("MONGO_URI"), "docker": "mongodb://mongodb:27017/"}
 
 
 class NotificationService():
@@ -22,12 +21,12 @@ class NotificationService():
         max_tries = 5
         for attempt in range(1, max_tries + 1):
             try:
-                self.client = MongoClient(db_urls.get("docker"))
+                self.client = MongoClient(os.getenv("MONGO_URI"))
                 self.client.admin.command('ping')
                 self.db = self.client["plumbit_notification"]
                 self.collection = self.db["notification"]
                 print(
-                    "[Database Connection]: Connected to Plumbit Notification Database")
+                    "[Database Connection]: Connected to Plumbit Notification Mongo Database")
                 break
             except Exception as error:
                 if attempt == max_tries:

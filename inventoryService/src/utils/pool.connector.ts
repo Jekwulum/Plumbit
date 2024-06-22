@@ -40,10 +40,10 @@ const queryWithRetry = (query: string, successMessage: string, errorMessage: str
   }, 5, 5000);
 };
 
-const connectWithRetry = () => queryWithRetry('SELECT NOW();', '[Database connection]: Connected correctly to Plumbit Inventory database', 'Error connecting to the database: ');
+const connectWithRetry = () => queryWithRetry('SELECT NOW();', '[Database connection]: Connected correctly to Plumbit Inventory PostgreSQL database', 'Error connecting to the PostgreSQL database: ');
 
 connectWithRetry().catch(error => {
-  inventoryLogger.error(`Error connecting to the database: ${error}`);
+  inventoryLogger.error(`Error connecting to the PostgreSQL database: ${error}`);
 });
 
 export const queryPromise = queryWithRetry;
