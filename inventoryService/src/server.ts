@@ -1,9 +1,16 @@
 import path from 'path';
 import * as grpc from '@grpc/grpc-js';
 import * as protoLoader from '@grpc/proto-loader';
-import dotenv from 'dotenv';
+import { config } from 'dotenv';
 
-dotenv.config();
+config({path: path.resolve(__dirname, '../.env')});
+const environment = process.env.ENVIRONMENT;
+
+let envPath = '../development.env';
+if (environment === 'docker') {
+  envPath = '../docker.env';
+}
+config({ path: path.resolve(__dirname, envPath) });
 
 import { ProtoGrpcType } from './protobufs/inventory';
 import InventoryHandler from './handlers/inventory.handler';
@@ -35,7 +42,8 @@ Promise.all([
 ])
   .catch((error) => inventoryLogger.error(`Error creating tables: ${error}`));
 
-server.bindAsync(`localhost:${PORT}`, grpc.ServerCredentials.createInsecure(), (err, port) => {
+const network = process.env.INVENTORY_SERVICE_NETWORK;
+server.bindAsync(`${network}:${PORT}`, grpc.ServerCredentials.createInsecure(), (err, port) => {
   if (err) inventoryLogger.error(`Error running the server ${err}`);
-  else inventoryLogger.info(`Inventory-service Server running at http://localhost:${port}`);
+  else inventoryLogger.info(`Inventory-service Server running at http://${network}:${port}`);
 });

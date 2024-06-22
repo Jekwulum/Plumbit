@@ -23,6 +23,7 @@ def main():
   except KeyboardInterrupt:
     print(f"[Server Connection]: Python gRPC server stopped for Notification Microservice on port {PORT}...")
     server.stop(0)
+  print('hello')
 
 if __name__ == '__main__':
   main()

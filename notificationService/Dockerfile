@@ -1,6 +1,6 @@
-FROM python:3.11-alpine
+FROM python:3.11-slim
 
-WORKDIR /app
+WORKDIR /home/plumbit/notification
 
 COPY requirements.txt .
 
@@ -8,8 +8,6 @@ RUN pip install -r requirements.txt
 
 COPY . .
 
-ENV PORT=4004
-
 EXPOSE 4004
 
-CMD ["python", "src/server.py"]
+CMD ["python3", "-u", "src/server.py"]

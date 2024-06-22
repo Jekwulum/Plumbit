@@ -1,11 +1,10 @@
 FROM python:3.11-slim
 
-WORKDIR /app
+WORKDIR /home/plumbit/reservation
 
 # Install the PostgreSQL development libraries
 RUN apt-get update \
-    && apt-get -y install libpq-dev gcc \
-    && pip install psycopg2
+    && apt-get -y install libpq-dev gcc
 
 COPY requirements.txt .
 
@@ -13,8 +12,6 @@ RUN pip install -r requirements.txt
 
 COPY . .
 
-ENV PORT=4002
-
 EXPOSE 4002
 
-CMD ["python", "src/server.py"]
+CMD ["python3", "-u", "src/server.py"]

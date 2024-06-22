@@ -1,0 +1,5 @@
+services:
+  api-gateway:
+    build:
+      target: production
+    command: node build/server.js

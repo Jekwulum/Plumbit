@@ -1,4 +1,5 @@
 import uuid
+import time
 import grpc
 import psycopg2
 import os
@@ -16,25 +17,38 @@ NOTIFICATION_SERVICE_PORT = os.getenv('NOTIFICATION_SERVICE_PORT', 4004)
 
 class ReservationService():
     def __init__(self):
-        try:
-            self.conn = psycopg2.connect(
-                **db_connection_params, cursor_factory=RealDictCursor)
-            self.cursor = self.conn.cursor()
-            self._create_table()
-            print("[Database Connection]: Connected to Plumbit Reservation Database")
+        max_retries = 5
+        retry_delay = 5 # 5 seconds
 
-            self.inventory_channel = grpc.insecure_channel(
-                f"localhost:{INVENTORY_SERVICE_PORT}")
-            self.inventory_stub = inventory_pb2_grpc.InventoryServiceStub(
-                self.inventory_channel)
+        for attempt in range(1, max_retries + 1):
+            try:
+                self.conn = psycopg2.connect(
+                    **db_connection_params, cursor_factory=RealDictCursor)
+                self.cursor = self.conn.cursor()
+                print("[Database Connection]: Connected to Plumbit Reservation Database")
+                self._create_table()
 
-            self.notification_channel = grpc.insecure_channel(
-                f"localhost:{os.getenv('NOTIFICATION_SERVICE_PORT', 4004)}")
-            self.notification_stub = notification_pb2_grpc.NotificationServiceStub(
-                self.notification_channel)
+                self.inventory_channel = grpc.insecure_channel(
+                    f"localhost:{INVENTORY_SERVICE_PORT}")
+                self.inventory_stub = inventory_pb2_grpc.InventoryServiceStub(
+                    self.inventory_channel)
 
-        except (Exception, psycopg2.DatabaseError) as error:
-            print("Error while connecting to PostgreSQL", error)
+                self.notification_channel = grpc.insecure_channel(
+                    f"localhost:{os.getenv('NOTIFICATION_SERVICE_PORT', 4004)}")
+                self.notification_stub = notification_pb2_grpc.NotificationServiceStub(
+                    self.notification_channel)
+                break
+
+            except (Exception, psycopg2.DatabaseError) as error:
+                print("Error while connecting to PostgreSQL", error)
+                if attempt < max_retries:
+                    print(f"Retrying in {retry_delay} seconds...")
+                    time.sleep(retry_delay)
+                else:
+                    print("Max retries reached. Could not connect to PostgreSQL.")
+                    raise
+
+
 
     def CreateReservation(self, request, context):
         reservation_id = str(uuid.uuid4())
@@ -241,6 +255,7 @@ class ReservationService():
                 """
             self.cursor.execute(query)
             self.conn.commit()
+            print("[Database Connection]: Created table 'reservations' successfully")
         except (Exception, psycopg2.DatabaseError) as error:
             print("Error while creating table: ", error)
 

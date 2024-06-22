@@ -1,5 +1,6 @@
 import os
 from datetime import datetime
+import time
 from bson.objectid import ObjectId
 from pymongo import MongoClient
 
@@ -13,17 +14,29 @@ message_templates = {
 }
 
 status = {"UNREAD": "unread", "READ": "read"}
+db_urls = {"local": os.getenv("MONGO_URI"), "docker": "mongodb://mongodb:27017/"}
 
 
 class NotificationService():
     def __init__(self):
-        try:
-            self.client = MongoClient(str(os.getenv("MONGO_URI")))
-            self.db = self.client["plumbit_notification"]
-            self.collection = self.db["notification"]
-            print("[Database Connection]: Connected to Plumbit Notification Database")
-        except (Exception) as error:
-            print(f"Error connecting to MongoDB: {error}")
+        max_tries = 5
+        for attempt in range(1, max_tries + 1):
+            try:
+                self.client = MongoClient(db_urls.get("docker"))
+                self.client.admin.command('ping')
+                self.db = self.client["plumbit_notification"]
+                self.collection = self.db["notification"]
+                print(
+                    "[Database Connection]: Connected to Plumbit Notification Database")
+                break
+            except Exception as error:
+                if attempt == max_tries:
+                    print(
+                        f"Failed to connect to MongoDB after {max_tries} attempts: {error}")
+                else:
+                    print(
+                        f"Error connecting to MongoDB (attempt {attempt}/{max_tries}): {error}")
+                    time.sleep(attempt * 0.5)  # Exponential backoff
 
     def CreateNotification(self, request, context):
         try:

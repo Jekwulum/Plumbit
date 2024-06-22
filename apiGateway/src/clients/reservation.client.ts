@@ -10,6 +10,7 @@ const RESERVATION_PROTO_PATH = path.resolve(__dirname, '../../proto/reservation.
 const reservationPackageDefinition = protoLoader.loadSync(RESERVATION_PROTO_PATH);
 const reservationGrpcObject = (grpc.loadPackageDefinition(reservationPackageDefinition) as unknown) as ProtoGrpcType;
 
-const ReservationClient = new reservationGrpcObject.reservationPackage.ReservationService(`localhost:${RESERVATION_SERVICE_PORT}`, grpc.credentials.createInsecure());
+const network = process.env.RESERVATION_SERVICE_NETWORK;
+const ReservationClient = new reservationGrpcObject.reservationPackage.ReservationService(`${network}:${RESERVATION_SERVICE_PORT}`, grpc.credentials.createInsecure());
 
 export default { ReservationClient };

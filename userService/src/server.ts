@@ -1,10 +1,17 @@
 import path from 'path';
 import * as grpc from '@grpc/grpc-js';
 import * as protoLoader from '@grpc/proto-loader';
-import dotenv from 'dotenv';
+import { config } from 'dotenv';
 import mongoose from 'mongoose';
 
-dotenv.config();
+config({path: path.resolve(__dirname, '../.env')}); // to get the environment
+const environment = process.env.ENVIRONMENT;
+
+let envPath = '../development.env';
+if (environment === 'docker') {
+  envPath = '../docker.env';
+}
+config({ path: path.resolve(__dirname, envPath) });
 
 import { ProtoGrpcType } from './protobufs/user';
 import AuthHandler from './handlers/auth.handler';
@@ -22,12 +29,25 @@ const server = new grpc.Server();
 server.addService(userPackage.UserService.service, UserHandler);
 server.addService(userPackage.AuthService.service, AuthHandler);
 
-const mongoURI = process.env.MONGO_URI;
-mongoose.connect(mongoURI as string)
-  .then(() => appLogger.info('[Database Connection]: Connected to Plumbit User Database'))
-  .catch((error) => appLogger.error(`Error connecting to Plumbit User Database: ${error}`));
+// const urls = { docker: 'mongodb://mongodb:27017/plumbit_user', local: process.env.MONGO_URI };
 
-server.bindAsync(`localhost:${PORT}`, grpc.ServerCredentials.createInsecure(), (err, port) => {
+function connectWithRetry(attempt: number = 1, maxRetries: number = 5) {
+  mongoose.connect(process.env.MONGO_URI as string)
+    .then(() => appLogger.info('[Database Connection]: Connected to Plumbit User Mongo Database'))
+    .catch((error) => {
+      if (attempt < maxRetries) {
+        appLogger.error(`Attempt ${attempt}: Error connecting to Plumbit User Mongo Database: ${error}. Retrying...`);
+        setTimeout(() => connectWithRetry(attempt + 1, maxRetries), 5000);
+      } else {
+        appLogger.error(`Error connecting to Plumbit User Mongo Database after ${attempt} attempts: ${error}`);
+      }
+    });
+}
+
+connectWithRetry();
+
+const network = process.env.USER_SERVICE_NETWORK;
+server.bindAsync(`${network}:${PORT}`, grpc.ServerCredentials.createInsecure(), (err, port) => {
   if (err) appLogger.error(`Error running the server ${err}`);
-  else appLogger.info(`User-service Server running at http://localhost:${port}`);
+  else appLogger.info(`User-service Server running at http://${network}:${port}`);
 });

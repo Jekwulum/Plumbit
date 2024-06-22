@@ -1,0 +1,13 @@
+services:
+  api-gateway:
+    build:
+      context: ./apiGateway/
+      dockerfile: Dockerfile
+    container_name: api-gateway
+    expose:
+      - '4000'
+    ports:
+      - '4000:4000'
+    env_file:
+      - ./apiGateway/.env
+    command: npm run start

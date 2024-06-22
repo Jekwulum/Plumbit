@@ -4,8 +4,9 @@
   "description": "An API gateway for plumbit microservice application",
   "main": "index.js",
   "scripts": {
-    "start": "ts-node src/server.ts",
-    "build": "./proto/proto-gen.sh",
+    "start": "NODE_PATH=./build node build/index.js",
+    "build": "tsc -p .",
+    "build-protos": "./proto/proto-gen.sh",
     "dev": "ts-node-dev --respawn --transpile-only src/server.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },

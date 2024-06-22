@@ -10,6 +10,7 @@ const NOTIFICATION_PROTO_PATH = path.resolve(__dirname, '../../proto/notificatio
 const notificationPackageDefinition = protoLoader.loadSync(NOTIFICATION_PROTO_PATH);
 const notificationGrpcObject = (grpc.loadPackageDefinition(notificationPackageDefinition) as unknown) as ProtoGrpcType;
 
-const NotificationClient = new notificationGrpcObject.notificationPackage.NotificationService(`localhost:${NOTIFICATION_SERVICE_PORT}`, grpc.credentials.createInsecure());
+const network = process.env.NOTIFICATION_SERVICE_NETWORK;
+const NotificationClient = new notificationGrpcObject.notificationPackage.NotificationService(`${network}:${NOTIFICATION_SERVICE_PORT}`, grpc.credentials.createInsecure());
 
 export default { NotificationClient };
