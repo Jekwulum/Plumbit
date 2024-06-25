@@ -1,17 +1,26 @@
+networks:
+  plumbit-network:
+    driver: bridge
+
 services:
-  # postgres:
-  #   image: postgres:15.1-alpine
-  #   container_name: postgres
-  #   ports:
-  #     - '5432:5432'
-  #   environment:
-  #     POSTGRES_USER: postgres
-  #     POSTGRES_PASSWORD: postgrespass
-  #     POSTGRES_DB: plumbit_reservation
-  #   volumes:
-  #     - pgdata:/var/lib/postgresql/data
-  #     - ./init-db.sh:/docker-entrypoint-initdb.d/init-db.sh
-  #   restart: unless-stopped
+  postgres:
+    image: postgres:15.1-alpine
+    container_name: postgres
+    expose:
+      - "5432"
+    hostname: postgres
+    ports:
+      - '5432:5432'
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgrespass
+      POSTGRES_DB: plumbit_reservation
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./init-db.sh:/docker-entrypoint-initdb.d/init-db.sh
+    restart: unless-stopped
+    networks:
+      - plumbit-network
   
   mongodb:
     image: mongo:latest
@@ -20,11 +29,11 @@ services:
       - '27017:27017'
     volumes:
       - mongo-data:/data/db
-      # - ./mongod.conf:/etc/mongod.conf
-    # environment:
-    #   MONGO_INITDB_ROOT_USERNAME: root
-    #   MONGO_INITDB_ROOT_PASSWORD: example
-    command: mongod --quiet
+      - ./mongod.conf:/etc/mongod.conf
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: example
+    command: ["mongod", "--config", "/etc/mongod.conf"]
     restart: unless-stopped
     networks:
       - plumbit-network
@@ -39,36 +48,42 @@ services:
       - '4000'
     ports:
       - '4000:4000'
+    environment:
+      - ENVIRONMENT:docker
     env_file:
-      - ./apiGateway/.env
+      - ./apiGateway/docker.env
     volumes:
       - ./apiGateway:/app
     depends_on:
-      # - reservation-service
+      - reservation-service
       - notification-service
+      - inventory-service
+      - user-service
     command: npm run dev
     restart: unless-stopped
     networks:
       - plumbit-network
 
-  # inventory-service:
-  #   build:
-  #     context: ./inventoryService/
-  #     dockerfile: Dockerfile
-  #   container_name: inventory-service
-  #   expose:
-  #     - '4003'
-  #   depends_on:
-  #     - postgres
-  #   ports:
-  #     - '4003:4003'
-  #   env_file:
-  #     - ./inventoryService/.env
-  #   volumes:
-  #   - ./inventoryService:/app
-  #   restart: unless-stopped
-  #   networks:
-  #     - plumbit-network
+  inventory-service:
+    build:
+      context: ./inventoryService/
+      dockerfile: Dockerfile
+    container_name: inventory-service
+    expose:
+      - '4003'
+    depends_on:
+      - postgres
+    ports:
+      - '4003:4003'
+    environment:
+      - ENVIRONMENT:docker
+    env_file:
+      - ./inventoryService/docker.env
+    volumes:
+    - ./inventoryService:/app
+    restart: unless-stopped
+    networks:
+      - plumbit-network
     
   notification-service:
     build:
@@ -81,8 +96,10 @@ services:
       - mongodb
     ports:
       - '4004:4004'
+    environment:
+      - ENVIRONMENT:docker
     env_file:
-      - ./notificationService/.env
+      - ./notificationService/docker.env
     volumes:
       - ./notificationService:/app
       - notification-service-data:/app/data
@@ -90,24 +107,32 @@ services:
     networks:
       - plumbit-network
 
-  # reservation-service:
-  #   build:
-  #     context: ./reservationService/
-  #     dockerfile: Dockerfile
-  #   container_name: reservation-service
-  #   expose:
-  #     - '4002'
-  #   depends_on:
-  #     - postgres
-  #   ports:
-  #     - '4002:4002'
-  #   env_file:
-  #     - ./reservationService/.env
-    # volumes:
-    # - ./reservationService:/app
-    # restart: unless-stopped
-    # networks:
-    #   - plumbit-network
+  reservation-service:
+    build:
+      context: ./reservationService/
+      dockerfile: Dockerfile
+    container_name: reservation-service
+    expose:
+      - '4002'
+    depends_on:
+      - postgres
+      - notification-service
+      - inventory-service
+    ports:
+      - '4002:4002'
+    environment:
+      - ENVIRONMENT:docker
+      - POSTGRES_HOST=postgres
+      - POSTGRES_DB=plumbit_reservation
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgrespass
+    env_file:
+      - ./reservationService/docker.env
+    volumes:
+    - ./reservationService:/app
+    restart: unless-stopped
+    networks:
+      - plumbit-network
   
   user-service:
     build:
@@ -120,8 +145,10 @@ services:
       - mongodb
     ports:
       - '4001:4001'
+    environment:
+      - ENVIRONMENT:docker
     env_file:
-      - ./userService/.env
+      - ./userService/docker.env
     volumes:
     - ./userService:/app
     restart: unless-stopped
@@ -132,7 +159,3 @@ volumes:
   pgdata:
   mongo-data:
   notification-service-data:
-
-networks:
-  plumbit-network:
-    driver: bridge

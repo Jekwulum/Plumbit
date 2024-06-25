@@ -16,5 +16,5 @@ import appLogger from './utils/appLogger';
 const port = process.env.PORT || 4000;
 
 app.listen(port, () => {
-  appLogger.info(`API-Gateway Server is running on port ${port}`);
+  appLogger.info(`API-Gateway Server is running on port: ${port}`);
 });
