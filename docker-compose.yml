@@ -159,3 +159,4 @@ volumes:
   pgdata:
   mongo-data:
   notification-service-data:
+  user-service-data:

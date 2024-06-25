@@ -7,7 +7,7 @@ import validateJWT from "../utils/validate.jwt";
 const router = Router();
 router.post('/signup', validateResource(AuthValidator.registerUser), AuthController.RegisterUser);
 router.post('/login', validateResource(AuthValidator.loginUser), AuthController.LoginUser);
-router.post('/update-password', validateJWT, validateResource(AuthValidator.updatePassword), AuthController.UpdatePassword);
+router.patch('/update-password', validateJWT, validateResource(AuthValidator.updatePassword), AuthController.UpdatePassword);
 
 
 

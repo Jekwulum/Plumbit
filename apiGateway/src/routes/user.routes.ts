@@ -9,9 +9,7 @@ router.use(validateJWT);
 router.get('/', UserController.GetUsers);
 router.get('/profile', UserController.GetUser);
 router.get('/:id', validateResource(UserValidator.getUser), UserController.GetUser);
-router.patch('/:id', validateResource(UserValidator.updateUser), UserController.UpdateUser);
-router.delete('/:id', validateResource(UserValidator.deleteUser), UserController.DeleteUser);
-
-
+router.patch('/', validateResource(UserValidator.updateUser), UserController.UpdateUser);
+router.delete('/', UserController.DeleteUser);
 
 export default router;

@@ -31,7 +31,8 @@ const UserController = {
   },
 
   UpdateUser: async (req: Request, res: Response) => {
-    UserClient.UpdateUser({ ...req.params, ...req.body }, (err: ServiceError | null, result) => {
+    console.log(req.params);
+    UserClient.UpdateUser({ id: res.locals.user.id, ...req.body }, (err: ServiceError | null, result) => {
       if (err) {
         appLogger.error(err.message);
         res.status(500).json({ message: `${err.message}` });
@@ -42,7 +43,7 @@ const UserController = {
   },
 
   DeleteUser: async (req: Request, res: Response) => {
-    UserClient.DeleteUser({ id: req.params.id }, (err: ServiceError | null, result) => {
+    UserClient.DeleteUser({ id: res.locals.user.id }, (err: ServiceError | null, result) => {
       if (err) {
         appLogger.error(err.message);
         res.status(500).json({ message: `${err.message}` });
