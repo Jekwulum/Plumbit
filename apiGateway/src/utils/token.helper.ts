@@ -6,6 +6,7 @@ const refreshTokenSecretKey = 'your_refresh_token_secret_key_here';
 
 const TokenHelper = {
   generateAccessToken(user: User) {
+    console.log(user);
     const payload = {
       id: user.id,
       email: user.email,

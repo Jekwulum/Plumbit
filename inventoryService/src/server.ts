@@ -9,6 +9,8 @@ const environment = process.env.ENVIRONMENT;
 let envPath = '../development.env';
 if (environment === 'docker') {
   envPath = '../docker.env';
+} else if (environment === 'production') {
+  envPath = '../production.env';
 }
 config({ path: path.resolve(__dirname, envPath) });
 

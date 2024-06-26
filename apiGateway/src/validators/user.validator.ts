@@ -11,6 +11,7 @@ const UserValidator = {
   }),
 
   updateUser: Joi.object({
+    params: Joi.object().optional(),
     body: Joi.object().keys({
       firstName: Joi.string(),
       lastName: Joi.string(),

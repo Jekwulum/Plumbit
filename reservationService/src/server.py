@@ -11,6 +11,8 @@ if environment == 'development':
     load_dotenv('development.env')
 elif environment == 'docker':
     load_dotenv('docker.env')
+elif environment == 'production':
+    load_dotenv('production.env')
 
 sys.path.append(os.path.join(os.path.dirname(__file__), 'protobufs'))
 
@@ -28,8 +30,9 @@ def main():
         server.start()
         print(f"[Server Connection]: Python gRPC server started for Reservation Microservice on {network}:{PORT}...")
         server.wait_for_termination()
-    except KeyboardInterrupt:
+    except (Exception, KeyboardInterrupt) as error:
         print(f"[Server Connection]: Python gRPC server stopped for Reservation Microservice on  {network}:{PORT}...")
+        print(f"Error: {error}")
         server.stop(0)
 
 if __name__ == '__main__':

@@ -31,7 +31,6 @@ const UserController = {
   },
 
   UpdateUser: async (req: Request, res: Response) => {
-    console.log(req.params);
     UserClient.UpdateUser({ id: res.locals.user.id, ...req.body }, (err: ServiceError | null, result) => {
       if (err) {
         appLogger.error(err.message);

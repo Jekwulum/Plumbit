@@ -10,6 +10,8 @@ const environment = process.env.ENVIRONMENT;
 let envPath = '../development.env';
 if (environment === 'docker') {
   envPath = '../docker.env';
+} else if (environment === 'prod') {
+  envPath = '../production.env';
 }
 config({ path: path.resolve(__dirname, envPath) });
 
@@ -28,8 +30,6 @@ const userPackage = grpcObject.userPackage;
 const server = new grpc.Server();
 server.addService(userPackage.UserService.service, UserHandler);
 server.addService(userPackage.AuthService.service, AuthHandler);
-
-// const urls = { docker: 'mongodb://mongodb:27017/plumbit_user', local: process.env.MONGO_URI };
 
 function connectWithRetry(attempt: number = 1, maxRetries: number = 5) {
   mongoose.connect(process.env.MONGO_URI as string)

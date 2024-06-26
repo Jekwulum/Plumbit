@@ -11,6 +11,8 @@ if environment == 'development':
     load_dotenv('development.env')
 elif environment == 'docker':
     load_dotenv('docker.env')
+elif environment == 'production':
+    load_dotenv('production.env')
 
 sys.path.append(os.path.join(os.path.dirname(__file__), 'protobufs'))
 

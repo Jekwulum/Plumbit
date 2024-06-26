@@ -7,6 +7,9 @@ const PoolConnector = new Pool({
   database: process.env.POSTGRES_DB,
   password: process.env.POSTGRES_PASSWORD,
   port: 5432,
+  ssl: {
+    rejectUnauthorized: false
+  }
 });
 
 const retry = async <T>(fn: () => Promise<T>, retries: number = 5, delay: number = 5000): Promise<T|undefined> => {
