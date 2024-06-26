@@ -5,25 +5,25 @@
 # Features
 ## Microservice Architecture:
 **Plumbit** utilizes a microservice architecture to ensure scalability, flexibility, and efficient management of plumbing repair bookings. The microservices communicate with each other and the API-gateway via **gRPC**, while the API-gateway communicates with clients via **REST** for handling incoming requests.
-1. ### User-service (Node (TypeScript) and MongoDB):
+1. ### 🧑‍🤝‍🧑User-service (Node (TypeScript) and MongoDB):
    - Handles user authentication and management.
    - Manages user data and profiles.
    - Ensures secure login and registration processes.
 
-2. ### Notification-service (Python and MongoDB):
+2. ### 🔔Notification-service (Python and MongoDB):
    - Manages the delivery of notifications to users and plumbers.
 
-3. ### Inventory-service (Node (TypeScript) and PostgreSQL):
+3. ### 🗒️Inventory-service (Node (TypeScript) and PostgreSQL):
    - Manages parts inventory for plumbing repairs.
    - Tracks and updates stock levels.
    - Generates out-of-stock lists.
 
-4. ### Reservation-service (Python and PostgreSQL):
+4. ### 📖Reservation-service (Python and PostgreSQL):
    - Manages the booking of plumbing repairs.
    - Handles scheduling and rescheduling of appointments.
    - Provides a dashboard data for plumbers to view their daily appointments.
 
-5. ### API-gateway (Node (TypeScript)):
+5. ### 🛡️API-gateway (Node (TypeScript)):
    - Routes requests to the appropriate microservices.
    - Handles validation and authentication of incoming requests.
    - Provides a single entry point for the client applications to interact with the system.
