@@ -1,6 +1,6 @@
 
 # Project Description
-**Plumbit** is a comprehensive reservation system tailored for a local plumbing company, designed to streamline the process of booking plumbing repairs. The system enables users to book the repairs they need, providing plumbers with a dashboard data that displays their appointments and the parts required for upcoming repairs. In case of out-of-stock parts, a separate list is generated to inform plumbers about what they need to procure from the parts store.
+**Plumbit** is a reservation system tailored for a local plumbing company, designed to streamline the process of booking plumbing repairs. The system enables users to book the repairs they need, providing plumbers with a dashboard data that displays their appointments and the parts required for upcoming repairs. In case of out-of-stock parts, a separate list is generated to inform plumbers about what they need to procure from the parts store.
 
 # Features
 ## Microservice Architecture:
