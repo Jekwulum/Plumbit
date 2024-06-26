@@ -404,7 +404,7 @@ Authorization: Bearer <JWT_TOKEN>
 }
 ```
 
-6. 5. ### Delete Reservation
+6. ### Delete Reservation
    - **Endpoint:** `/reservations/`
    - **Method:** `DELETE`
    - **Request Headers:**
